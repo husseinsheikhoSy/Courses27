@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Free Course Access</title>
+  
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
+  <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -76,7 +78,6 @@
       gap: 16px;
     }
 
-    /* ── Header badge ── */
     .header-badge {
       background: rgba(124,107,255,0.12);
       border: 1px solid rgba(124,107,255,0.25);
@@ -108,27 +109,16 @@
       background-clip: text;
     }
 
-    .divider {
-      width: 100%;
-      height: 1px;
-      background: var(--border);
-    }
+    .divider { width: 100%; height: 1px; background: var(--border); }
 
-    /* ── Steps ── */
     .steps-wrap { width: 100%; display: flex; flex-direction: column; gap: 8px; }
     .steps-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--hint); }
     .steps { display: flex; gap: 6px; width: 100%; }
-    .step {
-      flex: 1; height: 4px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 99px;
-      transition: background .4s;
-    }
+    .step { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 99px; }
     .step.done   { background: var(--accent); }
     .step.active { background: var(--accent); animation: pulsebar 1.4s ease-in-out infinite; }
     @keyframes pulsebar { 0%,100%{opacity:1} 50%{opacity:.45} }
 
-    /* ── Info chips ── */
     .chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; }
     .chip {
       display: flex; align-items: center; gap: 6px;
@@ -140,9 +130,7 @@
       color: var(--hint);
     }
     .chip strong { color: var(--text); font-weight: 600; }
-    .chip-icon { font-size: 14px; }
 
-    /* ── Notice box ── */
     .notice {
       width: 100%;
       background: rgba(124,107,255,0.07);
@@ -156,137 +144,46 @@
       display: flex;
       gap: 10px;
     }
-    .notice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .notice strong { color: var(--accent2); font-weight: 700; }
+    .notice-icon { font-size: 16px; flex-shrink: 0; }
 
-    /* ── Buttons ── */
     .btn-watch {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: var(--radius);
+      width: 100%; padding: 16px; border: none; border-radius: var(--radius);
       background: linear-gradient(135deg, #7c6bff 0%, #a855f7 100%);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
       box-shadow: 0 6px 28px rgba(124,107,255,0.35);
       transition: transform .15s, opacity .2s;
-      position: relative; overflow: hidden;
-      letter-spacing: 0.2px;
     }
-    .btn-watch:active  { transform: scale(.97); }
-    .btn-watch:disabled {
-      opacity: .35; cursor: not-allowed;
-      background: rgba(255,255,255,0.07);
-      box-shadow: none;
-    }
-    .btn-watch .btn-icon { font-size: 16px; }
-    .btn-watch.loading::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-      animation: shimmer 1.2s infinite;
-    }
-    @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+    .btn-watch:disabled { opacity: .35; cursor: not-allowed; background: rgba(255,255,255,0.07); box-shadow: none; }
 
     .btn-enroll {
-      width: 100%;
-      padding: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.04);
-      color: var(--hint);
-      font-size: 15px;
-      font-weight: 700;
-      cursor: not-allowed;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all .4s ease;
-      position: relative;
-      letter-spacing: 0.2px;
+      width: 100%; padding: 16px; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius); background: rgba(255,255,255,0.04);
+      color: var(--hint); font-size: 15px; font-weight: 700;
+      cursor: not-allowed; display: flex; align-items: center; justify-content: center; gap: 10px;
     }
     .btn-enroll.unlocked {
       background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-      border-color: transparent;
-      color: #fff;
-      cursor: pointer;
+      border-color: transparent; color: #fff; cursor: pointer;
       box-shadow: 0 6px 28px rgba(16,185,129,0.35);
       animation: popIn .4s cubic-bezier(0.34,1.56,0.64,1);
     }
-    .btn-enroll.unlocked:active { transform: scale(.97); }
-    @keyframes popIn {
-      0%   { transform: scale(.88); opacity: .6; }
-      60%  { transform: scale(1.03); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .lock-icon { font-size: 17px; transition: all .3s; }
-
-    /* ── Success pulse ring ── */
-    .unlock-ring {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      border: 2px solid var(--green);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-      animation: ringPulse 1.5s ease infinite;
-    }
-    @keyframes ringPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
-      50%      { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
-    }
-
-    /* ── Footnote ── */
-    .footnote { font-size: 11px; color: var(--hint); opacity: .7; line-height: 1.5; }
-
-    /* ── Error screen ── */
-    .error-icon {
-      width: 72px; height: 72px;
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.25);
-      border-radius: 22px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
-    }
-    .btn-ghost {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s;
-    }
-    .btn-ghost:hover { background: rgba(255,255,255,0.08); }
   </style>
 </head>
 <body>
 
-<!-- ── Screen 1: Loading ── -->
 <div id="s-loading" class="screen active">
   <div class="loader-wrap">
     <div class="spinner-ring"></div>
-    <p class="loading-text">Preparing your free course&hellip;</p>
+    <p class="loading-text" id="loading-msg">Initializing secure access...</p>
   </div>
 </div>
 
-<!-- ── Screen 2: Main ── -->
 <div id="s-main" class="screen">
-
   <div class="steps-wrap">
     <div class="steps-label">
       <span>Step 2 of 3</span>
-      <span id="step-label-text">Watch ad to unlock</span>
+      <span id="step-label-text">Verifying offer status...</span>
     </div>
     <div class="steps">
       <div class="step done"></div>
@@ -296,178 +193,167 @@
   </div>
 
   <div class="card">
-
     <div class="header-badge">100% Free Course</div>
-
     <div class="course-icon">🎓</div>
-
-    <h2>Unlock Your Free Enrollment</h2>
-
+    <h2 id="main-title">Unlock Your Free Enrollment</h2>
     <div class="divider"></div>
 
     <div class="chips">
-      <div class="chip"><span class="chip-icon">🏷</span><span>Price: <strong style="color:#34d399">FREE</strong></span></div>
-      <div class="chip"><span class="chip-icon">⏱</span><span>Takes: <strong style="color:#34d399">~15 sec</strong></span></div>
-      <div class="chip"><span class="chip-icon">✅</span><span><strong  style="color:#34d399">No payment</strong> needed</span></div>
+      <div class="chip"><span>Price: <strong style="color:#34d399">FREE</strong></span></div>
+      <div class="chip"><span>Takes: <strong style="color:#34d399">~15 sec</strong></span></div>
     </div>
-
-    <div class="divider"></div>
 
     <div class="notice">
       <span class="notice-icon">⚠️</span>
-      <span>Watch the ad until the <strong>✕ close button appears</strong>, then close it yourself. The <strong>Enroll button</strong> unlocks automatically once the ad is fully completed.</span>
+      <span id="notice-text">Please wait a few seconds while we check for available sponsored ads to unlock your course.</span>
     </div>
 
-    <button class="btn-watch" id="btn-watch">
-      <span class="btn-icon">▶</span>
-      <span id="btn-watch-label">Watch Ad to Unlock</span>
+    <button class="btn-watch" id="btn-watch" onclick="handleWatchAd()" disabled>
+      <span id="btn-watch-label">Checking Ads...</span>
     </button>
 
-    <button class="btn-enroll" id="btn-enroll" disabled>
-      <span class="lock-icon" id="lock-icon">🔒</span>
-      <span id="enroll-label">Enroll Button — Watch ad first</span>
+    <button class="btn-enroll" id="btn-enroll" disabled onclick="goToCourse()">
+      <span id="lock-icon">🔒</span>
+      <span id="enroll-label">Enroll Button — Locked</span>
     </button>
 
-    <p class="footnote">Enroll button activates automatically after the ad ends.</p>
-
+    <p style="font-size: 11px; color: var(--hint); opacity: .7;">Button activates automatically if no ads are found.</p>
   </div>
-
-</div>
-
-<!-- ── Screen 3: Error ── -->
-<div id="s-error" class="screen">
-  <div class="error-icon">⚠️</div>
-  <h2 style="font-size:19px;font-weight:800">Ad Unavailable</h2>
-  <p style="color:var(--hint);font-size:13px;max-width:280px;line-height:1.6">
-    No ads are available right now. You can still access your course directly below.
-  </p>
-  <button class="btn-enroll unlocked" onclick="goToCourse()" style="cursor:pointer">
-    <span>🚀</span><span>Access Course Directly</span>
-  </button>
-  <button class="btn-ghost" onclick="startAd()">Try Again</button>
 </div>
 
 <script>
   const tg = window.Telegram?.WebApp || null;
   if (tg) { tg.ready(); tg.expand(); }
 
+  let adsCtrl = null;
+  let adUnlocked = false;
+  let checkAttempts = 0;
+  let checkInterval = null;
+  const MAX_ATTEMPTS = 14; // 14 * 500ms = 7 seconds
+
+  // --- Utility: Get Course URL ---
   function getCourseUrl() {
-    const code = tg?.initDataUnsafe?.start_param
-      || new URLSearchParams(window.location.search).get('startapp')
-      || new URLSearchParams(window.location.search).get('tgWebAppStartParam');
-    if (!code) { console.warn('No startapp param'); return null; }
+    const code = tg?.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('startapp');
+    if (!code) return 'https://www.udemy.com/';
     try {
-      const padded = code + '=='.slice(0, (4 - code.length % 4) % 4);
-      const decoded = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
-      if (decoded.startsWith('http')) { console.log('Course URL:', decoded); return decoded; }
-    } catch(e) { console.error('Base64 decode error:', e); }
-    return null;
+      const decoded = atob(code.replace(/-/g, '+').replace(/_/g, '/'));
+      return decoded.startsWith('http') ? decoded : 'https://www.udemy.com/';
+    } catch(e) { return 'https://www.udemy.com/'; }
   }
-
   const COURSE_URL = getCourseUrl();
-  let ads = null;
-  let adWatched = false;
 
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id)?.classList.add('active');
-  }
-
-  function unlockEnrollButton() {
-    if (adWatched) return;
-    adWatched = true;
-
-    const s2 = document.getElementById('step2');
-    const s3 = document.getElementById('step3');
-    const lbl = document.getElementById('step-label-text');
-    if (s2) { s2.classList.remove('active'); s2.classList.add('done'); }
-    if (s3) { s3.classList.add('active'); }
-    if (lbl) { lbl.textContent = 'Enroll now'; }
-
-    const btn   = document.getElementById('btn-enroll');
-    const icon  = document.getElementById('lock-icon');
-    const label = document.getElementById('enroll-label');
-    if (btn)   { btn.disabled = false; btn.classList.add('unlocked'); btn.onclick = goToCourse; }
-    if (icon)  { icon.textContent = '🎓'; }
-    if (label) { label.textContent = 'Enroll Now — 100% FREE'; }
-
-    const watchBtn = document.getElementById('btn-watch');
-    if (watchBtn) { watchBtn.style.opacity = '0.3'; watchBtn.disabled = true; }
-  }
-
-  function goToCourse() {
-    const url = COURSE_URL || 'https://www.udemy.com/';
-    if (tg?.openLink) {
-      tg.openLink(url);
-      setTimeout(() => tg.close(), 600);
-    } else {
-      window.location.href = url;
+  // --- Ads Logic ---
+  window.addEventListener('load', () => {
+    // 1. تهيئة الـ SDK
+    if (typeof TelegramAdsController !== 'undefined') {
+      try {
+        adsCtrl = new TelegramAdsController();
+        adsCtrl.initialize({ pubId: "1006337", appId: "6995" });
+      } catch(e) { console.error("Init error", e); }
     }
-  }
+    
+    // 2. بدء مؤقت الفحص (7 ثوانٍ)
+    checkInterval = setInterval(verifyAdStatus, 500);
+    
+    // الانتقال للشاشة الرئيسية فوراً لبدء العد
+    setTimeout(() => {
+        document.getElementById('s-loading').classList.remove('active');
+        document.getElementById('s-main').classList.add('active');
+    }, 1000);
+  });
 
-  function startAd() {
-    const watchBtn   = document.getElementById('btn-watch');
-    const watchLabel = document.getElementById('btn-watch-label');
+  function verifyAdStatus() {
+    checkAttempts++;
+    
+    // تحديث النص للمستخدم
+    const timeLeft = Math.max(0, Math.ceil((MAX_ATTEMPTS - checkAttempts) / 2));
+    if (!adUnlocked && timeLeft > 0) {
+        document.getElementById('btn-watch-label').innerText = `Checking Ads (${timeLeft}s)...`;
+    }
 
-    if (watchBtn)   { watchBtn.disabled = true; watchBtn.classList.add('loading'); }
-    if (watchLabel) { watchLabel.textContent = 'Loading Ad...'; }
+    // التحقق من توفر إعلان
+    let isAvailable = false;
+    if (adsCtrl) {
+      const checkFn = adsCtrl.isAdAvailable ?? adsCtrl.isReady ?? null;
+      try { isAvailable = checkFn.call(adsCtrl); } catch(e) {}
+    }
 
-    if (!ads) {
-      console.warn('Telega ads not ready — unlocking directly');
-      unlockEnrollButton();
+    if (isAvailable) {
+      clearInterval(checkInterval);
+      enableWatchButton();
       return;
     }
 
-    ads.ad_show({
-      adBlockUuid: "302c2a07-f352-4121-9e17-ee2ebe06fb1d"
-    })
-    .then((result) => {
-      console.log('Ad result:', result);
-      unlockEnrollButton();
-    })
-    .catch((err) => {
-      console.error('Ad error:', err);
-      if (watchBtn)   { watchBtn.disabled = false; watchBtn.classList.remove('loading'); }
-      if (watchLabel) { watchLabel.textContent = 'Watch Ad to Unlock'; }
-      const errType = err?.type || err?.code || '';
-      if (!errType || errType === 'ADS_NOT_FOUND' || errType === 'NO_ADS') {
-        unlockEnrollButton();
-      }
-    });
-  }
-
-  function initTelega() {
-    try {
-      ads = window.TelegaIn.AdsController.create_miniapp({
-        token: '8e629c7e-6935-47c2-9911-1780a52de341'
-      });
-
-      document.getElementById('btn-watch')?.addEventListener('click', startAd);
-      showScreen('s-main');
-      console.log('Telega ads initialized');
-    } catch(e) {
-      console.error('Telega init error:', e);
-      showScreen('s-error');
+    // إذا انتهى الوقت (7 ثوانٍ) ولم نجد إعلان
+    if (checkAttempts >= MAX_ATTEMPTS) {
+      clearInterval(checkInterval);
+      unlockDirectly();
     }
   }
 
-  window.addEventListener('load', () => {
-    showScreen('s-loading');
+  function enableWatchButton() {
+    const btn = document.getElementById('btn-watch');
+    btn.disabled = false;
+    document.getElementById('btn-watch-label').innerText = "▶ Watch Ad to Unlock";
+    document.getElementById('step-label-text').innerText = "Ad ready! Watch to unlock";
+    document.getElementById('notice-text').innerHTML = "A sponsored ad is ready. Watch it to <strong>unlock your course for free</strong>.";
+  }
 
-    let tries = 0;
-    const iv = setInterval(() => {
-      tries++;
-      if (window.TelegaIn?.AdsController) {
-        clearInterval(iv);
-        initTelega();
-      } else if (tries > 60) {
-        clearInterval(iv);
-        console.warn('Telega SDK timeout — showing main without ad');
-        unlockEnrollButton();
-        showScreen('s-main');
+  async function handleWatchAd() {
+    if (!adsCtrl || adUnlocked) return;
+    
+    const label = document.getElementById('btn-watch-label');
+    label.innerText = "Loading Ad...";
+    document.getElementById('btn-watch').disabled = true;
+
+    try {
+      await adsCtrl.show();
+      unlockDirectly(); // نجاح المشاهدة
+    } catch (err) {
+      console.error("Ad failed", err);
+      // في حال الخطأ أو الإغلاق، نقرر هل نفتح مباشرة أم نعيد المحاولة
+      const errMsg = String(err).toLowerCase();
+      if (errMsg.includes('skip') || errMsg.includes('close')) {
+          label.innerText = "▶ Watch Ad to Unlock";
+          document.getElementById('btn-watch').disabled = false;
+          alert("Please watch the full ad to unlock the course.");
+      } else {
+          unlockDirectly(); // خطأ فني، نفتح الكورس تيسيراً للمستخدم
       }
-    }, 200);
-  });
+    }
+  }
+
+  function unlockDirectly() {
+    if (adUnlocked) return;
+    adUnlocked = true;
+
+    // تحديث الخطوات (Steps)
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step3').classList.add('active');
+    document.getElementById('step-label-text').innerText = "Access Granted";
+
+    // إخفاء زر المشاهدة وتفعيل زر الدخول
+    document.getElementById('btn-watch').style.display = 'none';
+    const enrollBtn = document.getElementById('btn-enroll');
+    enrollBtn.disabled = false;
+    enrollBtn.classList.add('unlocked');
+    
+    document.getElementById('lock-icon').innerText = "🎓";
+    document.getElementById('enroll-label').innerText = "Enroll Now — 100% FREE";
+    document.getElementById('notice-text').innerText = "Success! Your course access has been unlocked. Click the green button below to start learning.";
+  }
+
+  function goToCourse() {
+    if (!adUnlocked) return;
+    if (tg?.openLink) {
+      tg.openLink(COURSE_URL);
+      setTimeout(() => tg.close(), 1000);
+    } else {
+      window.location.href = COURSE_URL;
+    }
+  }
 </script>
+
 </body>
 </html>
