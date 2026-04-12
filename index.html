@@ -6,7 +6,6 @@
   <title>Premium Course Access</title>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
 
   <style>
     :root {
@@ -122,17 +121,6 @@
       margin-top: 24px; font-size: 11px; color: var(--text-dim);
       opacity: 0.6; display: flex; align-items: center; justify-content: center; gap: 4px;
     }
-
-    /* ── Ripples for loading ── */
-    .pulse-ring {
-      position: absolute; width: 100%; height: 100%;
-      border: 2px solid var(--accent); border-radius: 50%;
-      animation: ripple 2s infinite; opacity: 0;
-    }
-    @keyframes ripple {
-      0% { transform: scale(0.8); opacity: 0.5; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
   </style>
 </head>
 <body>
@@ -144,16 +132,14 @@
     </div>
 
     <div class="timer-circle">
-      <div class="pulse-ring" id="pulse-effect"></div>
-      <div class="timer-text" id="countdown">7</div>
+      <div class="timer-text" id="countdown">5</div>
       <div class="icon-display" id="success-icon">🎓</div>
-      <div class="icon-display" id="ad-icon">🎬</div>
     </div>
 
     <h1 id="title">Verifying Connection</h1>
     <p id="description">We are searching for the best available offers to unlock your course for free.</p>
 
-    <button class="btn btn-primary" id="btn-watch" onclick="handleWatchAd()" disabled>
+    <button class="btn btn-primary" id="btn-directlink" onclick="handleDirectLink()" disabled>
       <span id="btn-text">Checking Offers...</span>
     </button>
 
@@ -166,7 +152,7 @@
     </div>
 
     <div class="footer-note">
-      <span>🛡️</span> Secure Verification by RichPartners
+      <span>🛡️</span> Secure Verification by HilltopAds DirectLink
     </div>
   </div>
 
@@ -174,12 +160,9 @@
   const tg = window.Telegram?.WebApp || null;
   if (tg) { tg.ready(); tg.expand(); }
 
-  let adsCtrl = null;
-  let adUnlocked = false;
-  let checkAttempts = 0;
-  const MAX_ATTEMPTS = 14; // 7 seconds total
-  let checkInterval = null;
-
+  // DirectLink URL من HilltopAds
+  const DIRECT_LINK_URL = "https://fluffy-machine.com/hy0AJ8";
+  
   // 1. Get Course URL
   function getCourseUrl() {
     const code = tg?.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('startapp');
@@ -191,107 +174,83 @@
   }
   const COURSE_URL = getCourseUrl();
 
-  // 2. Initialization
+  let countdownTimer = 5;
+  let timerInterval = null;
+
+  // 2. Countdown Timer (5 ثواني)
   window.addEventListener('load', () => {
-    if (typeof TelegramAdsController !== 'undefined') {
-      try {
-        adsCtrl = new TelegramAdsController();
-        adsCtrl.initialize({ pubId: "1006337", appId: "6995" });
-      } catch(e) { console.warn("Ads Init Fail"); }
-    }
-    
-    checkInterval = setInterval(updateLogic, 500);
+    timerInterval = setInterval(updateCountdown, 1000);
   });
 
-  function updateLogic() {
-    checkAttempts++;
-    
-    // Update Countdown UI
-    const secondsLeft = Math.ceil((MAX_ATTEMPTS - checkAttempts) / 2);
-    if (secondsLeft >= 0 && !adUnlocked) {
-      document.getElementById('countdown').innerText = secondsLeft;
-    }
+  function updateCountdown() {
+    countdownTimer--;
+    document.getElementById('countdown').innerText = countdownTimer;
 
-    // Check for Ad
-    let isAvailable = false;
-    if (adsCtrl) {
-      const checkFn = adsCtrl.isAdAvailable ?? adsCtrl.isReady ?? null;
-      try { isAvailable = checkFn.call(adsCtrl); } catch(e) {}
-    }
-
-    if (isAvailable) {
-      clearInterval(checkInterval);
-      showAdReadyState();
-      return;
-    }
-
-    // Timeout: Unlock Directly
-    if (checkAttempts >= MAX_ATTEMPTS) {
-      clearInterval(checkInterval);
-      unlockDirectly();
+    if (countdownTimer <= 0) {
+      clearInterval(timerInterval);
+      showDirectLinkReady();
     }
   }
 
-  function showAdReadyState() {
+  function showDirectLinkReady() {
     document.getElementById('countdown').style.display = 'none';
-    document.getElementById('ad-icon').style.display = 'block';
-    document.getElementById('pulse-effect').style.borderColor = 'var(--accent)';
     
-    document.getElementById('status-text').innerText = "OFFER FOUND";
+    document.getElementById('status-text').innerText = "OFFER READY";
     document.getElementById('title').innerText = "Unlock Access";
-    document.getElementById('description').innerText = "Watch a short sponsored video to unlock your premium enrollment for free.";
+    document.getElementById('description').innerText = "Click below to verify and unlock your premium course access instantly.";
     
-    const btn = document.getElementById('btn-watch');
+    const btn = document.getElementById('btn-directlink');
     btn.disabled = false;
-    document.getElementById('btn-text').innerText = "▶ WATCH AD TO UNLOCK";
+    document.getElementById('btn-text').innerHTML = '🔗 <span style="font-size:14px">VERIFY & UNLOCK</span>';
   }
 
-  async function handleWatchAd() {
-    const btn = document.getElementById('btn-watch');
+  async function handleDirectLink() {
+    const btn = document.getElementById('btn-directlink');
     btn.disabled = true;
-    document.getElementById('btn-text').innerText = "Loading Video...";
+    document.getElementById('btn-text').innerHTML = '⏳ Processing...';
     
-    // Show progress bar purely for aesthetics
+    // Progress simulation
     document.getElementById('progress-wrap').style.display = 'block';
-    let p = 0;
-    const pIv = setInterval(() => { p += 2; if(p<=95) document.getElementById('progress-bar').style.width = p+'%'; }, 200);
-
-    try {
-      await adsCtrl.show();
-      clearInterval(pIv);
-      unlockDirectly();
-    } catch (err) {
-      clearInterval(pIv);
-      const msg = String(err).toLowerCase();
-      if (msg.includes('skip') || msg.includes('close')) {
-        btn.disabled = false;
-        document.getElementById('btn-text').innerText = "▶ WATCH AD TO UNLOCK";
-        document.getElementById('progress-wrap').style.display = 'none';
-        alert("Please watch the full ad to get your reward.");
-      } else {
-        unlockDirectly(); // Error case: bypass
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 8;
+      if (progress <= 95) {
+        document.getElementById('progress-bar').style.width = progress + '%';
       }
-    }
+    }, 300);
+
+    // Simulate processing time (2-3 ثواني)
+    setTimeout(() => {
+      clearInterval(progressInterval);
+      document.getElementById('progress-bar').style.width = '100%';
+      
+      // فتح DirectLink في تبويب جديد (Popunder effect)
+      if (tg?.openLink) {
+        tg.openLink(DIRECT_LINK_URL);
+      } else {
+        window.open(DIRECT_LINK_URL, '_blank', 'noopener,noreferrer');
+      }
+      
+      // الانتقال للكورس بعد ثانيتين
+      setTimeout(() => {
+        unlockDirectly();
+      }, 1500);
+      
+    }, 2500);
   }
 
   function unlockDirectly() {
-    adUnlocked = true;
-    
-    // UI Transitions
-    document.getElementById('countdown').style.display = 'none';
-    document.getElementById('ad-icon').style.display = 'none';
+    // UI Success Transition
     document.getElementById('success-icon').style.display = 'block';
-    document.getElementById('pulse-effect').style.display = 'none';
-    
     document.getElementById('status-text').innerText = "ACCESS GRANTED";
     document.getElementById('status-dot').style.background = "var(--success)";
     document.getElementById('status-box').style.borderColor = "var(--success)";
     document.getElementById('status-box').style.color = "var(--success)";
     
     document.getElementById('title').innerText = "Ready to Begin!";
-    document.getElementById('description').innerText = "The verification is complete. You now have full access to your course.";
+    document.getElementById('description').innerText = "Verification complete! You now have full access to your premium course.";
     
-    document.getElementById('btn-watch').style.display = 'none';
+    document.getElementById('btn-directlink').style.display = 'none';
     document.getElementById('progress-wrap').style.display = 'none';
     document.getElementById('btn-enroll').style.display = 'flex';
   }
