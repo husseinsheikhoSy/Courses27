@@ -140,6 +140,38 @@
     @keyframes dot1 { 0%,100%{opacity:.3;transform:scale(.8)} 20%{opacity:1;transform:scale(1.2)} }
     @keyframes dot2 { 0%,100%{opacity:.3;transform:scale(.8)} 40%{opacity:1;transform:scale(1.2)} }
     @keyframes dot3 { 0%,100%{opacity:.3;transform:scale(.8)} 60%{opacity:1;transform:scale(1.2)} }
+
+    /* ── Responsive Design Improvements (3A) ── */
+    @media (max-width: 320px) {
+      .container { padding: 24px 16px; border-radius: 24px; }
+      h1 { font-size: 20px; }
+      p { font-size: 13px; }
+      .btn { padding: 16px; font-size: 15px; }
+      .timer-text { font-size: 28px; }
+      .timer-circle { width: 90px; height: 90px; }
+    }
+
+    @media (min-width: 401px) {
+      .container { max-width: 480px; }
+    }
+
+    /* ── Light Mode Support (3A) ── */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card-bg: rgba(255, 255, 255, 0.9);
+        --text-main: #0f172a;
+        --text-dim: #475569;
+        --border: rgba(0, 0, 0, 0.1);
+      }
+      .status-badge { background: rgba(0, 0, 0, 0.05); }
+      .chip { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.07); }
+    }
+
+    /* ── RTL Support for Arabic (3B) ── */
+    [dir="rtl"] { text-align: right; }
+    [dir="rtl"] .btn { flex-direction: row-reverse; }
+    [dir="rtl"] .status-badge { flex-direction: row-reverse; }
   </style>
 </head>
 <body>
@@ -163,8 +195,8 @@
     animation:pulseCard 2s ease-in-out infinite;
   ">
     <div style="font-size:52px; margin-bottom:16px; animation:bounceHand 1.4s ease-in-out infinite;">👆</div>
-    <h2 style="font-size:20px; font-weight:800; color:#f9fafb; margin-bottom:10px; letter-spacing:-0.4px;">Tap to Continue</h2>
-    <p style="font-size:13px; color:#9ca3af; line-height:1.6; margin:0;">Tap anywhere to unlock your<br>free course access</p>
+    <h2 style="font-size:20px; font-weight:800; color:#f9fafb; margin-bottom:10px; letter-spacing:-0.4px;" id="overlay-title">Tap to Continue</h2>
+    <p style="font-size:13px; color:#9ca3af; line-height:1.6; margin:0;" id="overlay-desc">Tap anywhere to unlock your<br>free course access</p>
     <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:6px;">
       <span style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;animation:dot1 1.2s ease-in-out infinite;display:block;"></span>
       <span style="width:6px;height:6px;border-radius:50%;background:#8b5cf6;animation:dot2 1.2s ease-in-out infinite;display:block;"></span>
@@ -189,19 +221,16 @@
   <h1 id="title">Verifying Connection</h1>
   <p id="description">We are searching for the best available offers to unlock your course for free.</p>
 
-  <!-- زر الإعلان الأول -->
   <button class="btn btn-primary" id="btn-watch" onclick="handleWatchAd()" disabled style="display:none;">
     <span id="btn-text">Watch Ad to Unlock</span>
   </button>
 
-  <!-- زر الانتقال للمرحلة الثانية (جديد) -->
   <button class="btn btn-secondary" id="btn-next-phase" onclick="startPhase2()">
-    <span>🔄</span> Go to Final Step
+    <span>🔄</span> <span id="next-btn-text">Go to Final Step</span>
   </button>
 
-  <!-- زر التحميل النهائي -->
   <button class="btn btn-success" id="btn-enroll" onclick="goToCourse()">
-    <span>🚀</span> ENROLL NOW FOR FREE
+    <span>🚀</span> <span id="enroll-text">ENROLL NOW FOR FREE</span>
   </button>
 
   <div class="progress-container" id="progress-wrap">
@@ -209,7 +238,7 @@
   </div>
 
   <div class="footer-note">
-    <span>🛡️</span> Secure Verification by RichPartners
+    <span>🛡️</span> <span id="footer-text">Secure Verification by RichPartners</span>
   </div>
 </div>
 
@@ -217,20 +246,142 @@
   const tg = window.Telegram?.WebApp || null;
   if (tg) { tg.ready(); tg.expand(); }
 
-  let adsCtrl       = null;
-  let adUnlocked    = false;
-  let adReady       = false;
-  let gestureDone   = false;
-  let checkAttempts = 0;
-  const MAX_ATTEMPTS = 20;
-  let checkInterval  = null;
+  /* ── B) Telegram Mini App Detection ── */
+  function isTelegramMiniApp() {
+    return !!window.Telegram?.WebApp || 
+           navigator.userAgent.includes('Telegram');
+  }
+
+  /* ── C) Network Quality Check ── */
+  function checkNetworkQuality() {
+    if ('connection' in navigator) {
+      const type = navigator.connection.effectiveType;
+      return type !== '2g' && type !== 'slow-2g';
+    }
+    return true;
+  }
+
+  /* ── 3B) Multi-Language Support ── */
+  const translations = {
+    'en': {
+      overlayTitle: 'Tap to Continue',
+      overlayDesc: 'Tap anywhere to unlock your<br>free course access',
+      title1: 'Verifying Connection',
+      desc1: 'We are searching for the best available offers to unlock your course for free.',
+      btnWatch: 'Watch Ad to Unlock',
+      btnNext: '🔄 Go to Final Step',
+      btnEnroll: '🚀 ENROLL NOW FOR FREE',
+      footer: 'Secure Verification by RichPartners',
+      phaseWait: 'PHASE {n}/{total} - WAITING',
+      phaseReady: 'PHASE {n}/{total} - AD READY',
+      phaseComplete: 'PHASE {n}/{total} - COMPLETE',
+      titlePhase: 'Preparing Phase {n}...',
+      descPhase: 'Please wait {sec} seconds before watching ad {n} of {total}.',
+      titleAd: 'Watch Ad {n} of {total}',
+      descAd: 'Loading your sponsored video, please wait.',
+      titleSkip: 'Action Required!',
+      descSkip: 'Please watch the full ad {n} to proceed.',
+      btnSkip: '▶ Watch Ad {n} to Continue',
+      titleComplete: 'Ready to Begin!',
+      descComplete: 'Verification complete. You now have full access to your course.',
+      alertSkip: 'Please watch the full ad {n} to unlock your course access.',
+      weakNet: 'Weak connection detected. Trying to load ad...'
+    },
+    'ar': {
+      overlayTitle: 'اضغط للمتابعة',
+      overlayDesc: 'اضغط في أي مكان لفتح الوصول<br>المجاني للكورس',
+      title1: 'جاري التحقق من الاتصال',
+      desc1: 'نبحث عن أفضل العروض المتاحة لفتح الكورس مجانًا.',
+      btnWatch: 'شاهد الإعلان للفتح',
+      btnNext: '🔄 انتقل للخطوة النهائية',
+      btnEnroll: '🚀 سجّل الآن مجانًا',
+      footer: 'تحقق آمن بواسطة RichPartners',
+      phaseWait: 'المرحلة {n}/{total} - جاري الانتظار',
+      phaseReady: 'المرحلة {n}/{total} - الإعلان جاهز',
+      phaseComplete: 'المرحلة {n}/{total} - مكتملة',
+      titlePhase: 'جاري تجهيز المرحلة {n}...',
+      descPhase: 'يرجى الانتظار {sec} ثوانٍ قبل مشاهدة الإعلان {n} من {total}.',
+      titleAd: 'شاهد الإعلان {n} من {total}',
+      descAd: 'جاري تحميل الفيديو الدعائي، يرجى الانتظار.',
+      titleSkip: 'إجراء مطلوب!',
+      descSkip: 'يرجى مشاهدة الإعلان {n} كاملًا للمتابعة.',
+      btnSkip: '▶ شاهد الإعلان {n} للمتابعة',
+      titleComplete: 'جاهز للبدء!',
+      descComplete: 'اكتمل التحقق. لديك الآن وصول كامل للكورس.',
+      alertSkip: 'يرجى مشاهدة الإعلان {n} كاملًا لفتح الوصول للكورس.',
+      weakNet: 'تم اكتشاف اتصال ضعيف. جاري محاولة تحميل الإعلان...'
+    },
+    'ru': {
+      overlayTitle: 'Нажмите чтобы продолжить',
+      overlayDesc: 'Нажмите в любом месте чтобы разблокировать<br>бесплатный доступ к курсу',
+      title1: 'Проверка соединения',
+      desc1: 'Мы ищем лучшие предложения для разблокировки вашего курса.',
+      btnWatch: 'Смотреть рекламу',
+      btnNext: '🔄 Перейти к финалу',
+      btnEnroll: '🚀 ЗАПИСАТЬСЯ БЕСПЛАТНО',
+      footer: 'Безопасная проверка RichPartners',
+      phaseWait: 'ЭТАП {n}/{total} - ОЖИДАНИЕ',
+      phaseReady: 'ЭТАП {n}/{total} - РЕКЛАМА ГОТОВА',
+      phaseComplete: 'ЭТАП {n}/{total} - ЗАВЕРШЕНО',
+      titlePhase: 'Подготовка этапа {n}...',
+      descPhase: 'Подождите {sec} сек. перед просмотром рекламы {n} из {total}.',
+      titleAd: 'Смотрите рекламу {n} из {total}',
+      descAd: 'Загрузка спонсируемого видео, пожалуйста подождите.',
+      titleSkip: 'Требуется действие!',
+      descSkip: 'Пожалуйста, досмотрите рекламу {n} до конца.',
+      btnSkip: '▶ Смотреть рекламу {n}',
+      titleComplete: 'Готово к началу!',
+      descComplete: 'Проверка завершена. У вас есть полный доступ к курсу.',
+      alertSkip: 'Пожалуйста, досмотрите рекламу {n} для разблокировки.',
+      weakNet: 'Слабое соединение. Попытка загрузки рекламы...'
+    }
+  };
+
+  function getLang() {
+    return tg?.initDataUnsafe?.user?.language_code || 
+           navigator.language.split('-')[0] || 'en';
+  }
+
+  function t(key, params = {}) {
+    const lang = getLang();
+    let str = translations[lang]?.[key] || translations['en'][key] || key;
+    // Replace placeholders like {n}, {total}, {sec}
+    Object.keys(params).forEach(k => {
+      str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), params[k]);
+    });
+    return str;
+  }
+
+  function applyTranslations() {
+    // RTL for Arabic
+    if (getLang() === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.documentElement.setAttribute('lang', 'ar');
+    }
+    
+    // Apply translations to elements
+    document.getElementById('overlay-title').innerHTML = t('overlayTitle');
+    document.getElementById('overlay-desc').innerHTML = t('overlayDesc');
+    document.getElementById('title').innerText = t('title1');
+    document.getElementById('description').innerText = t('desc1');
+    document.getElementById('btn-text').innerText = t('btnWatch');
+    document.getElementById('next-btn-text').innerText = t('btnNext').replace('🔄 ', '');
+    document.getElementById('enroll-text').innerText = t('btnEnroll').replace('🚀 ', '');
+    document.getElementById('footer-text').innerText = t('footer');
+    
+    // Telegram MainButton styling (B)
+    if (isTelegramMiniApp() && tg?.MainButton) {
+      tg.MainButton.setColor('#8b5cf6');
+      tg.MainButton.setTextColor('#ffffff');
+      tg.MainButton.setText(t('btnEnroll'));
+    }
+  }
 
   /* ── Multi-Ad System Config ── */
-  const REQUIRED_ADS = 2;
-  let adsWatched = 0;
-  let currentPhase = 1;
-  let phaseStartTime = null;
-  const PHASE_DURATION = 10;
+  let adsCtrl = null, adUnlocked = false, adReady = false, gestureDone = false;
+  let checkAttempts = 0, checkInterval = null;
+  const MAX_ATTEMPTS = 20, REQUIRED_ADS = 2, PHASE_DURATION = 10;
+  let adsWatched = 0, currentPhase = 1, phaseStartTime = null;
 
   function getCourseUrl() {
     const code = tg?.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('startapp');
@@ -242,23 +393,21 @@
   }
   const COURSE_URL = getCourseUrl();
 
-  // Called when user taps the overlay (first gesture)
   function onFirstTap() {
     if (gestureDone) return;
     gestureDone = true;
-
     const overlay = document.getElementById('tap-overlay');
     if (overlay) {
       overlay.style.transition = 'opacity .3s ease';
       overlay.style.opacity = '0';
       setTimeout(() => overlay.remove(), 320);
     }
-
     if (adReady && adsCtrl) launchAd();
   }
 
   window.addEventListener('load', () => {
     phaseStartTime = Date.now();
+    applyTranslations(); // Apply translations on load
     
     if (typeof TelegramAdsController !== 'undefined') {
       try {
@@ -271,13 +420,12 @@
 
   function updateLogic() {
     checkAttempts++;
-    
     const elapsed = Math.floor((Date.now() - phaseStartTime) / 1000);
     const secondsLeft = Math.max(0, PHASE_DURATION - elapsed);
     
     if (!adUnlocked && secondsLeft > 0) {
       document.getElementById('countdown').innerText = secondsLeft;
-      document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - WAITING`;
+      document.getElementById('status-text').innerText = t('phaseWait', { n: currentPhase, total: REQUIRED_ADS });
     }
 
     let isAvailable = false;
@@ -302,19 +450,13 @@
         overlay.style.opacity = '0';
         setTimeout(() => overlay.remove(), 320);
       }
-      if (currentPhase === 1) {
-        showPhaseTransitionUI();
-      } else {
-        unlockDirectly();
-      }
+      if (currentPhase === 1) showPhaseTransitionUI();
+      else unlockDirectly();
     }
   }
 
   function resetPhase() {
-    adReady = false;
-    adUnlocked = false;
-    checkAttempts = 0;
-    phaseStartTime = Date.now();
+    adReady = false; adUnlocked = false; checkAttempts = 0; phaseStartTime = Date.now();
     
     document.getElementById('countdown').style.display = 'block';
     document.getElementById('countdown').innerText = PHASE_DURATION;
@@ -325,9 +467,9 @@
     document.getElementById('btn-next-phase').style.display = 'none';
     document.getElementById('btn-enroll').style.display = 'none';
     
-    document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - WAITING`;
-    document.getElementById('title').innerText = `Preparing Phase ${currentPhase}...`;
-    document.getElementById('description').innerText = `Please wait ${PHASE_DURATION} seconds before watching ad ${currentPhase} of ${REQUIRED_ADS}.`;
+    document.getElementById('status-text').innerText = t('phaseWait', { n: currentPhase, total: REQUIRED_ADS });
+    document.getElementById('title').innerText = t('titlePhase', { n: currentPhase });
+    document.getElementById('description').innerText = t('descPhase', { sec: PHASE_DURATION, n: currentPhase, total: REQUIRED_ADS });
     
     clearInterval(checkInterval);
     checkInterval = setInterval(updateLogic, 500);
@@ -335,35 +477,50 @@
 
   function launchAd() {
     document.getElementById('countdown').style.display = 'none';
-    document.getElementById('ad-icon').style.display   = 'block';
-    document.getElementById('status-text').innerText   = `PHASE ${currentPhase}/${REQUIRED_ADS} - AD READY`;
-    document.getElementById('title').innerText         = `Watch Ad ${currentPhase} of ${REQUIRED_ADS}`;
-    document.getElementById('description').innerText   = 'Loading your sponsored video, please wait.';
+    document.getElementById('ad-icon').style.display = 'block';
+    document.getElementById('status-text').innerText = t('phaseReady', { n: currentPhase, total: REQUIRED_ADS });
+    document.getElementById('title').innerText = t('titleAd', { n: currentPhase, total: REQUIRED_ADS });
+    document.getElementById('description').innerText = t('descAd');
     document.getElementById('progress-wrap').style.display = 'block';
+
+    // C) Show weak connection warning
+    if (!checkNetworkQuality()) {
+      document.getElementById('description').innerText = t('weakNet');
+    }
 
     let p = 0;
     const pIv = setInterval(() => { p += 2; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 200);
 
+    // B+C) Fallback with timeout
+    const AD_TIMEOUT = 15000;
+    const timeout = setTimeout(() => {
+      console.warn('Ad timeout — using fallback');
+      clearInterval(pIv);
+      onAdCompleted();
+    }, AD_TIMEOUT);
+
     adsCtrl.show()
       .then(() => {
+        clearTimeout(timeout);
         clearInterval(pIv);
         onAdCompleted();
       })
       .catch(err => {
+        clearTimeout(timeout);
         clearInterval(pIv);
         const msg = String(err).toLowerCase();
         if (msg.includes('skip') || msg.includes('close')) {
-          document.getElementById('ad-icon').style.display        = 'none';
-          document.getElementById('countdown').style.display      = 'block';
-          document.getElementById('countdown').innerText          = '!';
-          document.getElementById('status-text').innerText        = 'AD SKIPPED';
-          document.getElementById('title').innerText              = 'Action Required!';
-          document.getElementById('description').innerText        = `Please watch the full ad ${currentPhase} to proceed.`;
-          document.getElementById('progress-wrap').style.display  = 'none';
+          document.getElementById('ad-icon').style.display = 'none';
+          document.getElementById('countdown').style.display = 'block';
+          document.getElementById('countdown').innerText = '!';
+          document.getElementById('status-text').innerText = 'AD SKIPPED';
+          document.getElementById('title').innerText = t('titleSkip');
+          document.getElementById('description').innerText = t('descSkip', { n: currentPhase });
+          document.getElementById('progress-wrap').style.display = 'none';
           const btn = document.getElementById('btn-watch');
           btn.style.display = 'flex';
-          btn.disabled      = false;
-          document.getElementById('btn-text').innerText = `▶ Watch Ad ${currentPhase} to Continue`;
+          btn.disabled = false;
+          document.getElementById('btn-text').innerText = t('btnSkip', { n: currentPhase });
           btn.onclick = () => handleWatchAd(currentPhase);
         } else {
           onAdCompleted();
@@ -373,15 +530,10 @@
 
   function onAdCompleted() {
     adsWatched++;
-    
-    if (adsWatched < REQUIRED_ADS) {
-      showPhaseTransitionUI();
-    } else {
-      unlockDirectly();
-    }
+    if (adsWatched < REQUIRED_ADS) showPhaseTransitionUI();
+    else unlockDirectly();
   }
 
-  // ── دالة جديدة: إظهار واجهة الانتقال بين المراحل ──
   function showPhaseTransitionUI() {
     document.getElementById('countdown').style.display = 'none';
     document.getElementById('ad-icon').style.display = 'none';
@@ -393,12 +545,13 @@
     nextBtn.style.display = 'flex';
     nextBtn.disabled = false;
     
-    document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - COMPLETE`;
-    document.getElementById('title').innerText = `✅ Phase ${currentPhase} Complete!`;
-    document.getElementById('description').innerText = `Great progress! Click below to proceed to the final step and unlock your course.`;
+    document.getElementById('status-text').innerText = t('phaseComplete', { n: currentPhase, total: REQUIRED_ADS });
+    document.getElementById('title').innerText = `✅ ${t('phaseComplete', { n: currentPhase, total: REQUIRED_ADS }).split(' - ')[0]}`;
+    document.getElementById('description').innerText = getLang() === 'ar' 
+      ? 'تقدم رائع! اضغط أدناه للمتابعة للخطوة النهائية وفتح الكورس.'
+      : 'Great progress! Click below to proceed to the final step and unlock your course.';
   }
 
-  // ── دالة جديدة: بدء المرحلة الثانية عند ضغط المستخدم ──
   function startPhase2() {
     document.getElementById('btn-next-phase').style.display = 'none';
     currentPhase = 2;
@@ -408,7 +561,7 @@
   async function handleWatchAd(phase = currentPhase) {
     const btn = document.getElementById('btn-watch');
     btn.disabled = true;
-    document.getElementById('btn-text').innerText = `Loading ad ${phase}...`;
+    document.getElementById('btn-text').innerText = t('btnWatch');
     document.getElementById('progress-wrap').style.display = 'block';
 
     let p = 0;
@@ -423,9 +576,9 @@
       const msg = String(err).toLowerCase();
       if (msg.includes('skip') || msg.includes('close')) {
         btn.disabled = false;
-        document.getElementById('btn-text').innerText = `▶ Watch Ad ${phase} to Continue`;
+        document.getElementById('btn-text').innerText = t('btnSkip', { n: phase });
         document.getElementById('progress-wrap').style.display = 'none';
-        alert(`Please watch the full ad ${phase} to unlock your course access.`);
+        alert(t('alertSkip', { n: phase }));
       } else {
         onAdCompleted();
       }
@@ -434,23 +587,29 @@
 
   function unlockDirectly() {
     adUnlocked = true;
-    document.getElementById('countdown').style.display    = 'none';
-    document.getElementById('ad-icon').style.display      = 'none';
+    document.getElementById('countdown').style.display = 'none';
+    document.getElementById('ad-icon').style.display = 'none';
     document.getElementById('success-icon').style.display = 'block';
     document.getElementById('pulse-effect').style.display = 'none';
 
-    document.getElementById('status-text').innerText        = 'ACCESS GRANTED';
-    document.getElementById('status-dot').style.background  = 'var(--success)';
+    document.getElementById('status-text').innerText = 'ACCESS GRANTED';
+    document.getElementById('status-dot').style.background = 'var(--success)';
     document.getElementById('status-box').style.borderColor = 'var(--success)';
-    document.getElementById('status-box').style.color       = 'var(--success)';
+    document.getElementById('status-box').style.color = 'var(--success)';
 
-    document.getElementById('title').innerText       = 'Ready to Begin!';
-    document.getElementById('description').innerText = 'Verification complete. You now have full access to your course.';
+    document.getElementById('title').innerText = t('titleComplete');
+    document.getElementById('description').innerText = t('descComplete');
 
-    document.getElementById('btn-watch').style.display    = 'none';
+    document.getElementById('btn-watch').style.display = 'none';
     document.getElementById('btn-next-phase').style.display = 'none';
     document.getElementById('progress-wrap').style.display = 'none';
-    document.getElementById('btn-enroll').style.display   = 'flex';
+    document.getElementById('btn-enroll').style.display = 'flex';
+    
+    // Update Telegram MainButton if available
+    if (tg?.MainButton) {
+      tg.MainButton.show();
+      tg.MainButton.onClick(goToCourse);
+    }
   }
 
   function goToCourse() {
