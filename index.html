@@ -21,232 +21,81 @@
       --tg-border: rgba(255, 255, 255, 0.12);
       --tg-glow: rgba(139, 92, 246, 0.25);
     }
-    
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
     body {
       background: var(--tg-bg);
-      background-image: 
-        radial-gradient(circle at 20% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 45%);
+      background-image: radial-gradient(circle at 20% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 45%), radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 45%);
       color: var(--tg-text);
-      min-height: 100vh;
       min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       padding: calc(env(safe-area-inset-top) + 8px) 16px calc(env(safe-area-inset-bottom) + 8px);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
       overflow-x: hidden;
     }
-
     .container {
-      width: 100%;
-      max-width: 420px;
+      width: 100%; max-width: 420px;
       background: var(--tg-card-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--tg-border);
       border-radius: 28px;
       padding: 28px 24px 24px;
       box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.45);
       text-align: center;
-      position: relative;
       animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
+    @keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-flex; align-items: center; gap: 8px;
       background: rgba(139, 92, 246, 0.12);
-      padding: 8px 16px;
-      border-radius: 99px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--tg-button);
-      margin-bottom: 20px;
-      border: 1px solid rgba(139, 92, 246, 0.25);
-      transition: all 0.3s ease;
+      padding: 8px 16px; border-radius: 99px;
+      font-size: 12px; font-weight: 600; color: var(--tg-button);
+      margin-bottom: 20px; border: 1px solid rgba(139, 92, 246, 0.25);
     }
-    
-    .status-badge.success {
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--tg-success);
-      border-color: rgba(16, 185, 129, 0.25);
-    }
-
-    .timer-wrapper {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .status-badge.success { background: rgba(16, 185, 129, 0.12); color: var(--tg-success); border-color: rgba(16, 185, 129, 0.25); }
+    .timer-wrapper { position: relative; width: 110px; height: 110px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; }
     .timer-circle {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
+      position: relative; width: 100%; height: 100%; border-radius: 50%;
       background: rgba(255, 255, 255, 0.04);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       border: 2px solid var(--tg-border);
     }
-
-    .timer-text {
-      font-size: 36px;
-      font-weight: 800;
-      color: var(--tg-text);
-      text-shadow: 0 0 24px var(--tg-glow);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .icon-display {
-      position: absolute;
-      font-size: 48px;
-      display: none;
-      animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    @keyframes scaleIn {
-      from { transform: scale(0) rotate(-10deg); opacity: 0; }
-      to { transform: scale(1) rotate(0); opacity: 1; }
-    }
-
+    .timer-text { font-size: 36px; font-weight: 800; color: var(--tg-text); text-shadow: 0 0 24px var(--tg-glow); font-variant-numeric: tabular-nums; }
+    .icon-display { position: absolute; font-size: 48px; display: none; animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes scaleIn { from { transform: scale(0) rotate(-10deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
     .pulse-ring {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: 2px solid var(--tg-button);
-      border-radius: 50%;
-      animation: ripple 2s infinite ease-out;
-      opacity: 0;
+      position: absolute; width: 100%; height: 100%; border: 2px solid var(--tg-button); border-radius: 50%;
+      animation: ripple 2s infinite ease-out; opacity: 0;
     }
-    
-    @keyframes ripple {
-      0% { transform: scale(0.8); opacity: 0.6; }
-      50% { opacity: 0.3; }
-      100% { transform: scale(1.6); opacity: 0; }
-    }
-
-    h1 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -0.3px;
-      line-height: 1.3;
-    }
-    
-    p {
-      color: var(--tg-hint);
-      font-size: 14px;
-      line-height: 1.55;
-      margin-bottom: 24px;
-      padding: 0 4px;
-    }
-
+    @keyframes ripple { 0% { transform: scale(0.8); opacity: 0.6; } 50% { opacity: 0.3; } 100% { transform: scale(1.6); opacity: 0; } }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px; line-height: 1.3; }
+    p { color: var(--tg-hint); font-size: 14px; line-height: 1.55; margin-bottom: 24px; padding: 0 4px; }
     .btn {
-      width: 100%;
-      padding: 16px 20px;
-      border-radius: 16px;
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-      background: var(--tg-button);
-      color: var(--tg-button-text);
+      width: 100%; padding: 16px 20px; border-radius: 16px; border: none;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all 0.2s ease; background: var(--tg-button); color: var(--tg-button-text);
       box-shadow: 0 8px 16px -4px rgba(139, 92, 246, 0.35);
     }
-    
     .btn:active { transform: scale(0.985); }
-    .btn:disabled {
-      background: var(--tg-border);
-      color: var(--tg-hint);
-      box-shadow: none;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .btn-success {
-      background: linear-gradient(135deg, #10b981, #059669);
-      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.35);
-      display: none;
-    }
-    
-    .btn-secondary {
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
-      box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.35);
-      display: none;
-    }
-
-    .progress-container {
-      width: 100%;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
-      margin-top: 18px;
-      overflow: hidden;
-      display: none;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--tg-button), #a78bfa);
-      border-radius: 10px;
-      transition: width 0.2s linear;
-    }
-
-    .footer-note {
-      margin-top: 24px;
-      font-size: 11px;
-      color: var(--tg-hint);
-      opacity: 0.7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-
-    @media (max-width: 360px) {
-      .container { padding: 24px 20px; border-radius: 24px; }
-      h1 { font-size: 20px; }
-      .timer-wrapper { width: 100px; height: 100px; }
-      .timer-text { font-size: 32px; }
-    }
-
+    .btn:disabled { background: var(--tg-border); color: var(--tg-hint); box-shadow: none; cursor: not-allowed; transform: none; }
+    .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.35); display: none; }
+    .btn-secondary { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.35); display: none; }
+    .progress-container { width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; margin-top: 18px; overflow: hidden; display: none; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--tg-button), #a78bfa); border-radius: 10px; transition: width 0.2s linear; }
+    .footer-note { margin-top: 24px; font-size: 11px; color: var(--tg-hint); opacity: 0.7; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    @media (max-width: 360px) { .container { padding: 24px 20px; border-radius: 24px; } h1 { font-size: 20px; } .timer-wrapper { width: 100px; height: 100px; } .timer-text { font-size: 32px; } }
     .fade-in { animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    
-    ::-webkit-scrollbar { width: 0; height: 0; }
-    * { scrollbar-width: none; -ms-overflow-style: none; }
+    ::-webkit-scrollbar { width: 0; height: 0; } * { scrollbar-width: none; -ms-overflow-style: none; }
   </style>
 </head>
 <body>
 
 <div class="container" id="main-card">
   <div class="status-badge" id="status-box">
-    <span id="status-dot" style="width:7px; height:7px; background:var(--tg-button); border-radius:50%; display:inline-block;"></span>
+    <span id="status-dot" style="width:7px;height:7px;background:var(--tg-button);border-radius:50%;display:inline-block;"></span>
     <span id="status-text">INITIALIZING</span>
   </div>
-
   <div class="timer-wrapper">
     <div class="pulse-ring" id="pulse-effect"></div>
     <div class="timer-circle">
@@ -255,554 +104,345 @@
       <span class="icon-display" id="ad-icon">🎬</span>
     </div>
   </div>
-
   <h1 id="title" class="fade-in">Verifying Connection</h1>
-  <p id="description" class="fade-in" style="animation-delay: 0.1s">Checking for available offers...</p>
-
-  <button class="btn" id="btn-watch" onclick="handleWatchAd()" disabled style="display:none;">
-    <span id="btn-text">Watch Ad to Unlock</span>
-  </button>
-
-  <button class="btn btn-secondary" id="btn-next-phase" onclick="startPhase2()" style="display:none;">
-    <span>🔄</span> Go to Final Step
-  </button>
-
-  <button class="btn btn-success" id="btn-enroll" onclick="goToCourse()" style="display:none;">
-    <span>🚀</span> ENROLL NOW FOR FREE
-  </button>
-
-  <div class="progress-container" id="progress-wrap">
-    <div class="progress-fill" id="progress-bar"></div>
-  </div>
-
-  <div class="footer-note">
-    <span>🛡️</span> Secure Verification by TADS
-  </div>
+  <p id="description" class="fade-in" style="animation-delay:0.1s">Checking for available offers...</p>
+  <button class="btn" id="btn-watch" onclick="handleWatchAd()" disabled style="display:none;"><span id="btn-text">Watch Ad to Unlock</span></button>
+  <button class="btn btn-secondary" id="btn-next-phase" onclick="startPhase2()" style="display:none;"><span>🔄</span> Go to Final Step</button>
+  <button class="btn btn-success" id="btn-enroll" onclick="goToCourse()" style="display:none;"><span>🚀</span> ENROLL NOW FOR FREE</button>
+  <div class="progress-container" id="progress-wrap"><div class="progress-fill" id="progress-bar"></div></div>
+  <div class="footer-note"><span>🛡️</span> Secure Verification by TADS</div>
 </div>
 
 <script>
-  // 📱 Telegram WebApp Initialization - FIXED & ENHANCED
-  const tg = window.Telegram?.WebApp || null;
-  let tgReady = false;
+/* =============================================
+   🔧 COUNTDOWN FIX - STARTS IMMEDIATELY
+   ============================================= */
+(function startCountdownImmediately() {
+  const MAX_WAIT = 3;
+  let seconds = MAX_WAIT;
+  const el = document.getElementById('countdown');
   
-  function initTelegram() {
-    if (!tg) {
-      console.warn('⚠️ Running outside Telegram WebApp');
-      tgReady = true;
-      startAppLogic();
-      return;
+  // ✅ Update immediately on script execution
+  if (el) el.textContent = seconds;
+  
+  const timer = setInterval(() => {
+    seconds--;
+    if (el) el.textContent = seconds;
+    
+    if (seconds <= 0) {
+      clearInterval(timer);
+      // Trigger ad check when countdown ends
+      if (window.onCountdownComplete) window.onCountdownComplete();
     }
-    
-    // Essential Telegram setup
-    tg.ready();
-    tg.expand?.();
-    tg.disableVerticalSwipes?.();
-    
-    // Apply Telegram theme colors
-    if (tg.themeParams) {
-      const { bg_color, text_color, hint_color, button_color, button_text_color, secondary_bg_color } = tg.themeParams;
-      if (bg_color) document.documentElement.style.setProperty('--tg-bg', bg_color);
-      if (text_color) document.documentElement.style.setProperty('--tg-text', text_color);
-      if (hint_color) document.documentElement.style.setProperty('--tg-hint', hint_color);
-      if (button_color) document.documentElement.style.setProperty('--tg-button', button_color);
-      if (button_text_color) document.documentElement.style.setProperty('--tg-button-text', button_text_color);
-      if (secondary_bg_color) document.documentElement.style.setProperty('--tg-card-bg', secondary_bg_color);
-      
-      const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme && bg_color) metaTheme.content = bg_color;
-    }
-    
-    // Setup MainButton with progress support
-    if (tg.MainButton) {
-      tg.MainButton.params.color = tg.themeParams?.button_color || '#8b5cf6';
-      tg.MainButton.params.text_color = tg.themeParams?.button_text_color || '#ffffff';
-      tg.MainButton.params.is_visible = false;
-      tg.MainButton.params.is_active = false;
-      
-      // Handle MainButton click
-      tg.MainButton.onClick(() => {
-        if (currentPhase === 1 && !adUnlocked) {
-          // Phase 1: Go to phase 2 or launch ad
-          if (adReady) {
-            launchAd();
-          } else {
-            startPhase2();
-          }
-        } else if (currentPhase === 2 && !adUnlocked) {
-          // Phase 2: Launch ad or unlock
-          if (adReady) {
-            launchAd();
-          } else {
-            unlockDirectly();
-          }
-        } else if (adUnlocked) {
-          // Final: Go to course
-          goToCourse();
-        }
-      });
-    }
-    
-    tgReady = true;
-    
-    // Start app logic immediately after TG init
-    startAppLogic();
-  }
-
-  // 🚀 Main App Logic - Called immediately
-  function startAppLogic() {
-    phaseStartTime = Date.now();
-    updateCountdownUI(MAX_WAIT_SECONDS); // ✅ Immediate update to fix stuck counter
-    initializeTads();
-    
-    if (tg?.HapticFeedback) {
-      tg.HapticFeedback.impactOccurred('light');
-    }
-  }
-
-  // ⏱️ FIXED: Countdown update function with immediate render
-  function updateCountdownUI(seconds) {
-    const el = document.getElementById('countdown');
-    if (el) {
-      el.textContent = seconds > 0 ? seconds : '0';
-      // Force reflow to ensure update in Telegram WebView
-      void el.offsetHeight;
-    }
-  }
-
-  // ⚙️ TADS Configuration
-  const WIDGET_ID = "9605";
-  const AD_TYPE = "fullscreen";
-  const IS_DEBUG = false;
-
-  // ⏱️ Timer Settings
-  const MAX_WAIT_SECONDS = 3;
-  const CHECK_INTERVAL_MS = 300;
-
-  // State Management
-  let adController = null;
-  let adUnlocked = false;
-  let adReady = false;
-  let adLoading = false;
-  let checkAttempts = 0;
-  let checkInterval = null;
-  let preloadPromise = null;
-  let countdownInterval = null; // ✅ Separate interval for countdown
-
-  // Multi-Ad System
-  const REQUIRED_ADS = 2;
-  let adsWatched = 0;
-  let currentPhase = 1;
-  let phaseStartTime = null;
-
-  // 🎯 TADS Callbacks
-  const onShowRewardCallback = (result) => {
-    console.log('✅ Ad completed:', result);
-    onAdCompleted();
+  }, 1000);
+  
+  // Expose control for external use
+  window.countdownControl = {
+    reset: () => { seconds = MAX_WAIT; if(el) el.textContent = seconds; },
+    stop: () => clearInterval(timer)
   };
+})();
 
-  const onAdsNotFound = () => {
-    console.log('⚠️ No ads found');
-    handleNoAdAvailable();
-  };
+/* =============================================
+   📱 TELEGRAM SETUP (Non-blocking)
+   ============================================= */
+const tg = window.Telegram?.WebApp || null;
 
-  const onAdError = (error) => {
-    console.log('❌ Ad error:', error);
-    handleNoAdAvailable();
-  };
-
-  function getCourseUrl() {
-    const code = tg?.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('startapp');
-    if (!code) return 'https://www.udemy.com/';
-    try {
-      const decoded = atob(code.replace(/-/g, '+').replace(/_/g, '/'));
-      return decoded.startsWith('http') ? decoded : 'https://www.udemy.com/';
-    } catch(e) { return 'https://www.udemy.com/'; }
+function initTelegram() {
+  if (!tg) return;
+  tg.ready(); tg.expand?.(); tg.disableVerticalSwipes?.();
+  
+  // Apply theme colors safely
+  if (tg.themeParams) {
+    const { bg_color, text_color, hint_color, button_color, button_text_color, secondary_bg_color } = tg.themeParams;
+    if (bg_color) document.documentElement.style.setProperty('--tg-bg', bg_color);
+    if (text_color) document.documentElement.style.setProperty('--tg-text', text_color);
+    if (hint_color) document.documentElement.style.setProperty('--tg-hint', hint_color);
+    if (button_color) document.documentElement.style.setProperty('--tg-button', button_color);
+    if (button_text_color) document.documentElement.style.setProperty('--tg-button-text', button_text_color);
+    if (secondary_bg_color) document.documentElement.style.setProperty('--tg-card-bg', secondary_bg_color);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta && bg_color) meta.content = bg_color;
   }
-  const COURSE_URL = getCourseUrl();
-
-  // Initialize Telegram ASAP
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTelegram);
-  } else {
-    initTelegram();
+  
+  // Setup MainButton
+  if (tg.MainButton) {
+    tg.MainButton.params.color = tg.themeParams?.button_color || '#8b5cf6';
+    tg.MainButton.params.text_color = tg.themeParams?.button_text_color || '#ffffff';
+    tg.MainButton.params.is_visible = false;
+    tg.MainButton.onClick(onMainButtonClick);
   }
+  
+  if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
 
-  function initializeTads() {
-    if (window.tads && typeof window.tads.init === 'function') {
-      initAdController();
-    } else {
-      const tadsInterval = setInterval(() => {
-        if (window.tads && typeof window.tads.init === 'function') {
-          clearInterval(tadsInterval);
-          initAdController();
-        }
-      }, 100);
-      
-      setTimeout(() => {
-        clearInterval(tadsInterval);
-        if (!adController) {
-          console.warn('⚠️ TADS fallback mode');
-          startAdCheckLoop();
-        }
-      }, 2000);
-    }
-  }
+// Initialize Telegram without blocking
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTelegram);
+} else {
+  initTelegram();
+}
 
-  function initAdController() {
+/* =============================================
+   ⚙️ APP STATE & TADS CONFIG
+   ============================================= */
+const WIDGET_ID = "9605", AD_TYPE = "fullscreen", IS_DEBUG = false;
+const REQUIRED_ADS = 2;
+
+let adController = null, adUnlocked = false, adReady = false, adLoading = false;
+let adsWatched = 0, currentPhase = 1, phaseStartTime = Date.now();
+
+function getCourseUrl() {
+  const code = tg?.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('startapp');
+  if (!code) return 'https://www.udemy.com/';
+  try {
+    const decoded = atob(code.replace(/-/g,'+').replace(/_/g,'/'));
+    return decoded.startsWith('http') ? decoded : 'https://www.udemy.com/';
+  } catch(e) { return 'https://www.udemy.com/'; }
+}
+const COURSE_URL = getCourseUrl();
+
+/* =============================================
+   🎯 TADS CALLBACKS
+   ============================================= */
+const onShowRewardCallback = () => { console.log('✅ Ad completed'); onAdCompleted(); };
+const onAdsNotFound = () => { console.log('⚠️ No ads'); handleNoAdAvailable(); };
+const onAdError = (e) => { console.log('❌ Ad error:', e); handleNoAdAvailable(); };
+
+/* =============================================
+   🔁 TADS INIT (Non-blocking fallback)
+   ============================================= */
+function initializeTads() {
+  if (window.tads && typeof window.tads.init === 'function') {
     try {
       adController = window.tads.init({
-        widgetId: WIDGET_ID,
-        type: AD_TYPE,
-        debug: IS_DEBUG,
-        onShowReward: onShowRewardCallback,
-        onAdsNotFound: onAdsNotFound,
-        onError: onAdError
+        widgetId: WIDGET_ID, type: AD_TYPE, debug: IS_DEBUG,
+        onShowReward: onShowRewardCallback, onAdsNotFound: onAdsNotFound, onError: onAdError
       });
       console.log('✅ TADS initialized');
       startAdCheckLoop();
-    } catch(e) {
-      console.warn('❌ TADS init failed:', e);
-      startAdCheckLoop();
-    }
-  }
-
-  // ✅ FIXED: Separate countdown timer that runs independently
-  function startCountdownTimer() {
-    // Clear any existing countdown
-    if (countdownInterval) clearInterval(countdownInterval);
-    
-    let secondsLeft = MAX_WAIT_SECONDS;
-    updateCountdownUI(secondsLeft);
-    
-    countdownInterval = setInterval(() => {
-      secondsLeft--;
-      updateCountdownUI(secondsLeft);
-      
-      if (secondsLeft <= 0) {
-        clearInterval(countdownInterval);
+    } catch(e) { console.warn('❌ TADS init failed'); startAdCheckLoop(); }
+  } else {
+    const iv = setInterval(() => {
+      if (window.tads && typeof window.tads.init === 'function') {
+        clearInterval(iv); initializeTads();
       }
-    }, 1000);
+    }, 100);
+    setTimeout(() => { clearInterval(iv); if (!adController) { console.warn('⚠️ TADS fallback'); startAdCheckLoop(); } }, 2000);
   }
+}
 
-  function startAdCheckLoop() {
-    // ✅ Start countdown immediately and independently
-    startCountdownTimer();
-    
-    checkAttempts = 0;
-    checkInterval = setInterval(() => {
-      checkAttempts++;
-      const elapsed = Math.floor((Date.now() - phaseStartTime) / 1000);
-      const secondsLeft = Math.max(0, MAX_WAIT_SECONDS - elapsed);
-      
-      // Update status text (not countdown - that's handled separately)
-      if (!adReady && !adLoading) {
-        document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • CHECKING`;
-      }
-
-      if (secondsLeft === 0 || adReady) {
-        clearInterval(checkInterval);
-        if (!adReady && !adLoading) {
-          tryPreloadAd();
-        }
-        return;
-      }
-
-      if (!adLoading && !preloadPromise) {
-        tryPreloadAd();
-      }
-    }, CHECK_INTERVAL_MS);
-  }
-
-  function tryPreloadAd() {
-    if (!adController || adLoading) return;
-    
-    adLoading = true;
-    
-    // Update MainButton to show it's loading
-    if (tg?.MainButton) {
-      tg.MainButton.setText(`Loading Ad ${currentPhase}...`);
-      tg.MainButton.show();
-      tg.MainButton.params.is_active = false;
+/* =============================================
+   🔄 AD CHECK LOOP (Simple & Reliable)
+   ============================================= */
+function startAdCheckLoop() {
+  let attempts = 0, maxAttempts = 10;
+  const check = setInterval(() => {
+    attempts++;
+    if (adReady || attempts >= maxAttempts) {
+      clearInterval(check);
+      if (!adReady && !adLoading) tryPreloadAd();
+      return;
     }
-    
-    preloadPromise = adController.loadAd()
-      .then(() => {
-        adReady = true;
-        adLoading = false;
-        preloadPromise = null;
-        console.log('✅ Ad preloaded');
-        
-        document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • READY`;
-        document.getElementById('countdown').style.display = 'none';
-        document.getElementById('ad-icon').style.display = 'flex';
-        
-        // Update MainButton for ad ready state
-        if (tg?.MainButton) {
-          tg.MainButton.setText(`▶ Watch Ad ${currentPhase}/${REQUIRED_ADS}`);
-          tg.MainButton.params.is_active = true;
-          tg.MainButton.show();
-        }
-        
-        // Auto-launch after short delay for better UX
-        setTimeout(() => {
-          if (adReady && !adUnlocked) {
-            launchAd();
-          }
-        }, 500);
-      })
-      .catch((err) => {
-        adLoading = false;
-        preloadPromise = null;
-        console.log('⚠️ Preload failed:', err);
-        
-        // Fallback: enable MainButton to proceed manually
-        if (tg?.MainButton) {
-          tg.MainButton.setText(`Continue to Step ${currentPhase + 1}`);
-          tg.MainButton.params.is_active = true;
-          tg.MainButton.show();
-        }
-      });
-  }
+    if (!adLoading && adController) tryPreloadAd();
+  }, 300);
+}
 
-  function handleNoAdAvailable() {
-    clearInterval(checkInterval);
-    if (countdownInterval) clearInterval(countdownInterval);
-    adReady = true;
-    
-    // Update MainButton for fallback
-    if (tg?.MainButton) {
-      if (currentPhase === 1) {
-        tg.MainButton.setText('Continue to Final Step →');
-      } else {
-        tg.MainButton.setText('Get Access Now 🚀');
-      }
-      tg.MainButton.params.is_active = true;
-      tg.MainButton.show();
-    }
-    
-    if (currentPhase === 1) {
-      showPhaseTransitionUI();
-    } else {
-      unlockDirectly();
-    }
-  }
-
-  function resetPhase() {
-    adReady = false;
-    adUnlocked = false;
-    adLoading = false;
-    preloadPromise = null;
-    checkAttempts = 0;
-    phaseStartTime = Date.now();
-    
-    // Reset UI
-    document.getElementById('countdown').style.display = 'flex';
-    document.getElementById('countdown').textContent = MAX_WAIT_SECONDS;
-    document.getElementById('ad-icon').style.display = 'none';
-    document.getElementById('success-icon').style.display = 'none';
-    document.getElementById('progress-wrap').style.display = 'none';
-    document.getElementById('btn-watch').style.display = 'none';
-    document.getElementById('btn-next-phase').style.display = 'none';
-    document.getElementById('btn-enroll').style.display = 'none';
-    
-    document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • CHECKING`;
-    document.getElementById('title').textContent = `Preparing Phase ${currentPhase}...`;
-    document.getElementById('description').textContent = `Checking for ad ${currentPhase} of ${REQUIRED_ADS}...`;
-    
-    // Hide MainButton during reset
-    if (tg?.MainButton) {
-      tg.MainButton.hide();
-    }
-    
-    clearInterval(checkInterval);
-    if (countdownInterval) clearInterval(countdownInterval);
-    startAdCheckLoop();
-  }
-
-  function launchAd() {
-    if (adLoading) return;
-    
-    // Hide MainButton during ad playback
-    if (tg?.MainButton) {
-      tg.MainButton.hide();
-    }
-    
+function tryPreloadAd() {
+  if (!adController || adLoading) return;
+  adLoading = true;
+  updateMainButton(`Loading Ad ${currentPhase}...`, false);
+  
+  adController.loadAd().then(() => {
+    adReady = true; adLoading = false;
+    console.log('✅ Ad preloaded');
+    document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • READY`;
     document.getElementById('countdown').style.display = 'none';
     document.getElementById('ad-icon').style.display = 'flex';
-    document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • PLAYING`;
-    document.getElementById('title').textContent = `Watch Ad ${currentPhase} of ${REQUIRED_ADS}`;
-    document.getElementById('description').textContent = 'Loading your sponsored video...';
-    document.getElementById('progress-wrap').style.display = 'block';
+    updateMainButton(`▶ Watch Ad ${currentPhase}/${REQUIRED_ADS}`, true);
+    setTimeout(() => { if (adReady && !adUnlocked) launchAd(); }, 400);
+  }).catch(() => {
+    adLoading = false;
+    console.log('⚠️ Preload failed');
+    updateMainButton(`Continue →`, true);
+  });
+}
 
-    // Progress animation
-    let p = 0;
-    const pIv = setInterval(() => { 
-      p += 4; 
-      if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; 
-    }, 120);
+/* =============================================
+   🎬 AD LAUNCH & HANDLING
+   ============================================= */
+function launchAd() {
+  if (adLoading) return;
+  if (tg?.MainButton) tg.MainButton.hide();
+  
+  document.getElementById('countdown').style.display = 'none';
+  document.getElementById('ad-icon').style.display = 'flex';
+  document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • PLAYING`;
+  document.getElementById('title').textContent = `Watch Ad ${currentPhase} of ${REQUIRED_ADS}`;
+  document.getElementById('description').textContent = 'Loading your sponsored video...';
+  document.getElementById('progress-wrap').style.display = 'block';
+  
+  let p = 0;
+  const pIv = setInterval(() => { p += 4; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 120);
+  
+  if (adController?.showAd) {
+    adController.showAd().then(() => { clearInterval(pIv); document.getElementById('progress-bar').style.width = '100%'; })
+      .catch(() => { clearInterval(pIv); handleAdError('show'); });
+  } else { clearInterval(pIv); onAdCompleted(); }
+}
 
-    if (adController && typeof adController.showAd === 'function') {
-      adController.showAd()
-        .then(() => {
-          clearInterval(pIv);
-          document.getElementById('progress-bar').style.width = '100%';
-        })
-        .catch(err => {
-          clearInterval(pIv);
-          handleAdError(err);
-        });
-    } else {
-      clearInterval(pIv);
-      onAdCompleted();
-    }
+function handleAdError(type) {
+  document.getElementById('ad-icon').style.display = 'none';
+  document.getElementById('countdown').style.display = 'flex';
+  document.getElementById('countdown').textContent = '!';
+  document.getElementById('status-text').textContent = 'AD SKIPPED';
+  document.getElementById('title').textContent = 'Action Required!';
+  document.getElementById('description').textContent = `Please watch ad ${currentPhase} to proceed.`;
+  document.getElementById('progress-wrap').style.display = 'none';
+  
+  const btn = document.getElementById('btn-watch');
+  btn.style.display = 'flex'; btn.disabled = false;
+  document.getElementById('btn-text').textContent = `▶ Watch Ad ${currentPhase}`;
+  btn.onclick = () => handleWatchAd(currentPhase);
+  updateMainButton(`Retry Ad ${currentPhase}`, true);
+}
+
+function onAdCompleted() {
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  adsWatched++;
+  if (adsWatched < REQUIRED_ADS) showPhaseTransitionUI();
+  else unlockDirectly();
+}
+
+function handleNoAdAvailable() {
+  adReady = true;
+  if (currentPhase === 1) showPhaseTransitionUI();
+  else unlockDirectly();
+  updateMainButton(currentPhase === 1 ? 'Continue to Final Step →' : 'Get Access Now 🚀', true);
+}
+
+/* =============================================
+   🔄 PHASE MANAGEMENT
+   ============================================= */
+function showPhaseTransitionUI() {
+  document.getElementById('countdown').style.display = 'none';
+  document.getElementById('ad-icon').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('btn-watch').style.display = 'none';
+  document.getElementById('btn-enroll').style.display = 'none';
+  document.getElementById('btn-next-phase').style.display = 'flex';
+  document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • COMPLETE`;
+  document.getElementById('title').textContent = `✅ Phase ${currentPhase} Complete!`;
+  document.getElementById('description').textContent = `Click below to proceed to the final step.`;
+  updateMainButton(`Continue to Phase ${currentPhase + 1} →`, true);
+}
+
+function startPhase2() {
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+  document.getElementById('btn-next-phase').style.display = 'none';
+  currentPhase = 2; resetPhase();
+}
+
+function resetPhase() {
+  adReady = false; adUnlocked = false; adLoading = false;
+  phaseStartTime = Date.now();
+  
+  document.getElementById('countdown').style.display = 'flex';
+  document.getElementById('countdown').textContent = '3';
+  document.getElementById('ad-icon').style.display = 'none';
+  document.getElementById('success-icon').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('btn-watch').style.display = 'none';
+  document.getElementById('btn-next-phase').style.display = 'none';
+  document.getElementById('btn-enroll').style.display = 'none';
+  
+  document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • CHECKING`;
+  document.getElementById('title').textContent = `Preparing Phase ${currentPhase}...`;
+  document.getElementById('description').textContent = `Checking for ad ${currentPhase} of ${REQUIRED_ADS}...`;
+  
+  if (tg?.MainButton) tg.MainButton.hide();
+  initializeTads();
+}
+
+/* =============================================
+   🔓 UNLOCK & NAVIGATION
+   ============================================= */
+function unlockDirectly() {
+  adUnlocked = true;
+  document.getElementById('countdown').style.display = 'none';
+  document.getElementById('ad-icon').style.display = 'none';
+  document.getElementById('success-icon').style.display = 'flex';
+  document.getElementById('pulse-effect').style.display = 'none';
+  
+  document.getElementById('status-box').classList.add('success');
+  document.getElementById('status-dot').style.background = 'var(--tg-success)';
+  document.getElementById('status-text').textContent = 'ACCESS GRANTED';
+  document.getElementById('title').textContent = 'Ready to Begin!';
+  document.getElementById('description').textContent = 'Verification complete. You now have full access.';
+  
+  document.getElementById('btn-watch').style.display = 'none';
+  document.getElementById('btn-next-phase').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('btn-enroll').style.display = 'flex';
+  
+  updateMainButton('🚀 ENROLL NOW FOR FREE', true, true);
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+}
+
+function goToCourse() {
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+  if (tg?.openLink) { tg.openLink(COURSE_URL); setTimeout(() => tg.close?.(), 800); }
+  else window.location.href = COURSE_URL;
+}
+
+/* =============================================
+   🔘 MAINBUTTON HELPERS
+   ============================================= */
+function updateMainButton(text, active, isGreen = false) {
+  if (!tg?.MainButton) return;
+  tg.MainButton.setText(text);
+  tg.MainButton.params.is_active = !!active;
+  if (isGreen) tg.MainButton.params.color = '#10b981';
+  else tg.MainButton.params.color = tg.themeParams?.button_color || '#8b5cf6';
+  tg.MainButton.show();
+}
+
+function onMainButtonClick() {
+  if (adUnlocked) { goToCourse(); return; }
+  if (currentPhase === 1) {
+    if (adReady) launchAd(); else startPhase2();
+  } else {
+    if (adReady) launchAd(); else unlockDirectly();
   }
+}
 
-  function handleAdError(err) {
-    const msg = String(err).toLowerCase();
-    if (msg.includes('skip') || msg.includes('close') || msg.includes('cancel')) {
-      document.getElementById('ad-icon').style.display = 'none';
-      document.getElementById('countdown').style.display = 'flex';
-      document.getElementById('countdown').textContent = '!';
-      document.getElementById('status-text').textContent = 'AD SKIPPED';
-      document.getElementById('title').textContent = 'Action Required!';
-      document.getElementById('description').textContent = `Please watch ad ${currentPhase} to proceed.`;
-      document.getElementById('progress-wrap').style.display = 'none';
-      
-      const btn = document.getElementById('btn-watch');
-      btn.style.display = 'flex';
-      btn.disabled = false;
-      document.getElementById('btn-text').textContent = `▶ Watch Ad ${currentPhase}`;
-      btn.onclick = () => handleWatchAd(currentPhase);
-      
-      // Show MainButton as retry option
-      if (tg?.MainButton) {
-        tg.MainButton.setText(`Retry Ad ${currentPhase}`);
-        tg.MainButton.params.is_active = true;
-        tg.MainButton.show();
-      }
-    } else {
-      onAdCompleted();
-    }
-  }
+/* =============================================
+   🎯 WATCH AD BUTTON HANDLER
+   ============================================= */
+async function handleWatchAd(phase = currentPhase) {
+  const btn = document.getElementById('btn-watch');
+  btn.disabled = true; document.getElementById('btn-text').textContent = 'Loading...';
+  document.getElementById('progress-wrap').style.display = 'block';
+  
+  let p = 0;
+  const pIv = setInterval(() => { p += 4; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 120);
+  
+  try {
+    if (adController) { await adController.loadAd(); await adController.showAd(); }
+    else { clearInterval(pIv); onAdCompleted(); }
+  } catch (err) { clearInterval(pIv); handleAdError(err); }
+}
 
-  function onAdCompleted() {
-    // Haptic feedback
-    if (tg?.HapticFeedback) {
-      tg.HapticFeedback.notificationOccurred('success');
-    }
-    
-    adsWatched++;
-    if (adsWatched < REQUIRED_ADS) {
-      showPhaseTransitionUI();
-    } else {
-      unlockDirectly();
-    }
-  }
+/* =============================================
+   🔄 COUNTDOWN COMPLETE HOOK
+   ============================================= */
+window.onCountdownComplete = () => {
+  console.log('⏱️ Countdown finished - starting ad check');
+  if (!adController) initializeTads();
+};
 
-  function showPhaseTransitionUI() {
-    document.getElementById('countdown').style.display = 'none';
-    document.getElementById('ad-icon').style.display = 'none';
-    document.getElementById('progress-wrap').style.display = 'none';
-    document.getElementById('btn-watch').style.display = 'none';
-    document.getElementById('btn-enroll').style.display = 'none';
-    
-    const nextBtn = document.getElementById('btn-next-phase');
-    nextBtn.style.display = 'flex';
-    nextBtn.disabled = false;
-    
-    document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • COMPLETE`;
-    document.getElementById('title').textContent = `✅ Phase ${currentPhase} Complete!`;
-    document.getElementById('description').textContent = `Click below to proceed to the final step.`;
-    
-    // Update MainButton for phase transition
-    if (tg?.MainButton) {
-      tg.MainButton.setText(`Continue to Phase ${currentPhase + 1} →`);
-      tg.MainButton.params.is_active = true;
-      tg.MainButton.show();
-    }
-  }
-
-  function startPhase2() {
-    if (tg?.HapticFeedback) {
-      tg.HapticFeedback.impactOccurred('medium');
-    }
-    
-    document.getElementById('btn-next-phase').style.display = 'none';
-    currentPhase = 2;
-    resetPhase();
-  }
-
-  async function handleWatchAd(phase = currentPhase) {
-    const btn = document.getElementById('btn-watch');
-    btn.disabled = true;
-    document.getElementById('btn-text').textContent = `Loading...`;
-    document.getElementById('progress-wrap').style.display = 'block';
-
-    let p = 0;
-    const pIv = setInterval(() => { p += 4; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 120);
-
-    try {
-      if (adController) {
-        await adController.loadAd();
-        await adController.showAd();
-      } else {
-        clearInterval(pIv);
-        onAdCompleted();
-      }
-    } catch (err) {
-      clearInterval(pIv);
-      handleAdError(err);
-    }
-  }
-
-  function unlockDirectly() {
-    adUnlocked = true;
-    
-    // Success animations
-    document.getElementById('countdown').style.display = 'none';
-    document.getElementById('ad-icon').style.display = 'none';
-    document.getElementById('success-icon').style.display = 'flex';
-    document.getElementById('pulse-effect').style.display = 'none';
-
-    const statusBox = document.getElementById('status-box');
-    const statusDot = document.getElementById('status-dot');
-    statusBox.classList.add('success');
-    statusDot.style.background = 'var(--tg-success)';
-    
-    document.getElementById('status-text').textContent = 'ACCESS GRANTED';
-    document.getElementById('title').textContent = 'Ready to Begin!';
-    document.getElementById('description').textContent = 'Verification complete. You now have full access.';
-
-    document.getElementById('btn-watch').style.display = 'none';
-    document.getElementById('btn-next-phase').style.display = 'none';
-    document.getElementById('progress-wrap').style.display = 'none';
-    document.getElementById('btn-enroll').style.display = 'flex';
-    
-    // Update MainButton for final action
-    if (tg?.MainButton) {
-      tg.MainButton.setText('🚀 ENROLL NOW FOR FREE');
-      tg.MainButton.params.color = tg.themeParams?.button_color || '#10b981';
-      tg.MainButton.params.is_active = true;
-      tg.MainButton.show();
-    }
-    
-    if (tg?.HapticFeedback) {
-      tg.HapticFeedback.notificationOccurred('success');
-    }
-  }
-
-  function goToCourse() {
-    if (tg?.HapticFeedback) {
-      tg.HapticFeedback.impactOccurred('heavy');
-    }
-    
-    if (tg?.openLink) { 
-      tg.openLink(COURSE_URL); 
-      setTimeout(() => tg.close?.(), 800); 
-    } else {
-      window.location.href = COURSE_URL;
-    }
-  }
+// Start TADS init after a tiny delay to ensure DOM is ready
+setTimeout(initializeTads, 100);
 </script>
 </body>
 </html>
