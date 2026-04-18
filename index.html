@@ -6,7 +6,6 @@
   <title>Premium Course Access</title>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- ✅ TADS Script - الخدمة الجديدة -->
   <script src="https://w.tads.me/widget.js"></script>
 
   <style>
@@ -20,9 +19,7 @@
       --text-dim: #9ca3af;
       --border: rgba(255, 255, 255, 0.1);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
-
     body {
       background: var(--bg);
       background-image: 
@@ -33,7 +30,6 @@
       display: flex; align-items: center; justify-content: center;
       padding: 20px; overflow: hidden;
     }
-
     .container {
       width: 100%; max-width: 400px;
       background: var(--card-bg);
@@ -46,12 +42,7 @@
       position: relative;
       animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     .status-badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(255, 255, 255, 0.05);
@@ -59,57 +50,45 @@
       font-size: 12px; font-weight: 600; color: var(--accent);
       margin-bottom: 20px; border: 1px solid rgba(139, 92, 246, 0.2);
     }
-
     .timer-circle {
       position: relative; width: 100px; height: 100px; margin: 0 auto 24px;
       display: flex; align-items: center; justify-content: center;
     }
-
     .timer-text {
       font-size: 32px; font-weight: 800; color: var(--text-main);
       text-shadow: 0 0 20px var(--accent-glow);
     }
-
     .icon-display {
       font-size: 50px; display: none;
       animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
     @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
-
     h1 { font-size: 24px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
     p  { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
-
     .btn {
       width: 100%; padding: 18px; border-radius: 20px; border: none;
       font-size: 16px; font-weight: 700; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       transition: all 0.3s ease; position: relative; overflow: hidden;
     }
-
     .btn-primary {
       background: linear-gradient(135deg, #8b5cf6, #6d28d9);
       color: white; box-shadow: 0 10px 20px -5px rgba(109, 40, 217, 0.5);
     }
-
     .btn-primary:disabled {
       background: #374151; color: #9ca3af; box-shadow: none; cursor: not-allowed;
     }
-
     .btn-success {
       background: linear-gradient(135deg, #10b981, #059669);
       color: white; box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.5);
       display: none;
     }
-
     .btn-secondary {
       background: linear-gradient(135deg, #6366f1, #4f46e5);
       color: white; box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.5);
       display: none;
     }
-
     .btn:active { transform: scale(0.97); }
-
     .progress-container {
       width: 100%; height: 6px; background: rgba(255,255,255,0.05);
       border-radius: 10px; margin-top: 20px; display: none;
@@ -118,22 +97,16 @@
       height: 100%; width: 0%; background: var(--accent);
       border-radius: 10px; transition: width 0.3s ease;
     }
-
     .footer-note {
       margin-top: 24px; font-size: 11px; color: var(--text-dim);
       opacity: 0.6; display: flex; align-items: center; justify-content: center; gap: 4px;
     }
-
     .pulse-ring {
       position: absolute; width: 100%; height: 100%;
       border: 2px solid var(--accent); border-radius: 50%;
       animation: ripple 2s infinite; opacity: 0;
     }
-    @keyframes ripple {
-      0%   { transform: scale(0.8); opacity: 0.5; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
-
+    @keyframes ripple { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
     @keyframes fadeInOverlay { from{opacity:0} to{opacity:1} }
     @keyframes bounceHand { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     @keyframes pulseCard  { 0%,100%{box-shadow:0 0 60px rgba(139,92,246,.2)} 50%{box-shadow:0 0 80px rgba(139,92,246,.4)} }
@@ -144,7 +117,6 @@
 </head>
 <body>
 
-<!-- Full-screen tap overlay -->
 <div id="tap-overlay" style="
   position:fixed; inset:0; z-index:9999;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -181,13 +153,13 @@
 
   <div class="timer-circle">
     <div class="pulse-ring" id="pulse-effect"></div>
-    <div class="timer-text" id="countdown">10</div>
+    <div class="timer-text" id="countdown">3</div>
     <div class="icon-display" id="success-icon">🎓</div>
     <div class="icon-display" id="ad-icon">🎬</div>
   </div>
 
   <h1 id="title">Verifying Connection</h1>
-  <p id="description">We are searching for the best available offers to unlock your course for free.</p>
+  <p id="description">Checking for available offers...</p>
 
   <button class="btn btn-primary" id="btn-watch" onclick="handleWatchAd()" disabled style="display:none;">
     <span id="btn-text">Watch Ad to Unlock</span>
@@ -219,36 +191,39 @@
   const AD_TYPE = "fullscreen";
   const IS_DEBUG = false;
 
+  // ⏱️ Timer Settings - 3 seconds max wait
+  const MAX_WAIT_SECONDS = 3;
+  const CHECK_INTERVAL_MS = 300;
+
   let adController = null;
   let adUnlocked = false;
   let adReady = false;
+  let adLoading = false;
   let gestureDone = false;
   let checkAttempts = 0;
-  const MAX_ATTEMPTS = 20;
   let checkInterval = null;
+  let preloadPromise = null;
 
-  // Multi-Ad System Config
+  // Multi-Ad System
   const REQUIRED_ADS = 2;
   let adsWatched = 0;
   let currentPhase = 1;
   let phaseStartTime = null;
-  const PHASE_DURATION = 10;
 
   // 🎯 TADS Callbacks
   const onShowRewardCallback = (result) => {
-    console.log('✅ Ad completed, reward user:', result);
+    console.log('✅ Ad completed:', result);
     onAdCompleted();
   };
 
   const onAdsNotFound = () => {
-    console.log('⚠️ No ads found to show');
-    // Fallback: allow progression after timeout
-    if (checkAttempts >= MAX_ATTEMPTS) {
-      adReady = true;
-      if (gestureDone) {
-        currentPhase === 1 ? showPhaseTransitionUI() : unlockDirectly();
-      }
-    }
+    console.log('⚠️ No ads found');
+    handleNoAdAvailable();
+  };
+
+  const onAdError = (error) => {
+    console.log('❌ Ad error:', error);
+    handleNoAdAvailable();
   };
 
   function getCourseUrl() {
@@ -264,23 +239,20 @@
   function onFirstTap() {
     if (gestureDone) return;
     gestureDone = true;
-
     const overlay = document.getElementById('tap-overlay');
     if (overlay) {
       overlay.style.transition = 'opacity .3s ease';
       overlay.style.opacity = '0';
       setTimeout(() => overlay.remove(), 320);
     }
-    if (adReady) launchAd();
+    if (adReady && !adLoading) launchAd();
   }
 
   window.addEventListener('load', () => {
     phaseStartTime = Date.now();
     initializeTads();
-    checkInterval = setInterval(updateLogic, 500);
   });
 
-  // 🔄 Initialize TADS with fallback
   function initializeTads() {
     if (window.tads && typeof window.tads.init === 'function') {
       initAdController();
@@ -294,10 +266,10 @@
       setTimeout(() => {
         clearInterval(tadsInterval);
         if (!adController) {
-          console.warn('⚠️ TADS failed to initialize, using fallback mode');
-          adReady = true;
+          console.warn('⚠️ TADS fallback mode');
+          startAdCheckLoop();
         }
-      }, 5000);
+      }, 2000);
     }
   }
 
@@ -308,54 +280,108 @@
         type: AD_TYPE,
         debug: IS_DEBUG,
         onShowReward: onShowRewardCallback,
-        onAdsNotFound: onAdsNotFound
+        onAdsNotFound: onAdsNotFound,
+        onError: onAdError
       });
-      console.log('✅ TADS initialized successfully');
+      console.log('✅ TADS initialized');
+      startAdCheckLoop();
     } catch(e) {
       console.warn('❌ TADS init failed:', e);
-      adReady = true; // Fallback
+      startAdCheckLoop();
     }
   }
 
-  function updateLogic() {
-    checkAttempts++;
-    const elapsed = Math.floor((Date.now() - phaseStartTime) / 1000);
-    const secondsLeft = Math.max(0, PHASE_DURATION - elapsed);
-    
-    if (!adUnlocked && secondsLeft > 0) {
-      document.getElementById('countdown').innerText = secondsLeft;
-      document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - WAITING`;
-    }
-
-    // TADS: consider ready after initialization + timeout
-    if (secondsLeft === 0 && adController && !adReady) {
-      adReady = true;
-      clearInterval(checkInterval);
-      if (gestureDone) launchAd();
-      return;
-    }
-
-    if (checkAttempts >= MAX_ATTEMPTS && !adReady && secondsLeft === 0) {
-      clearInterval(checkInterval);
-      adReady = true;
-      const overlay = document.getElementById('tap-overlay');
-      if (overlay) {
-        overlay.style.transition = 'opacity .3s ease';
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.remove(), 320);
+  // 🔄 Smart Ad Check Loop - Check every 300ms, max 3 seconds
+  function startAdCheckLoop() {
+    checkAttempts = 0;
+    checkInterval = setInterval(() => {
+      checkAttempts++;
+      const elapsed = Math.floor((Date.now() - phaseStartTime) / 1000);
+      const secondsLeft = Math.max(0, MAX_WAIT_SECONDS - elapsed);
+      
+      // Update countdown UI
+      if (!adReady && !adLoading) {
+        document.getElementById('countdown').innerText = secondsLeft;
+        document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - CHECKING`;
       }
-      currentPhase === 1 ? showPhaseTransitionUI() : unlockDirectly();
+
+      // If time expired OR ad is ready, proceed
+      if (secondsLeft === 0 || adReady) {
+        clearInterval(checkInterval);
+        if (!adReady && !adLoading) {
+          // Try preload one last time
+          tryPreloadAd();
+        }
+        return;
+      }
+
+      // Try to preload ad if not already loading
+      if (!adLoading && !preloadPromise) {
+        tryPreloadAd();
+      }
+    }, CHECK_INTERVAL_MS);
+  }
+
+  // 🎯 Try to preload ad - if succeeds, mark as ready immediately
+  function tryPreloadAd() {
+    if (!adController || adLoading) return;
+    
+    adLoading = true;
+    preloadPromise = adController.loadAd()
+      .then(() => {
+        adReady = true;
+        adLoading = false;
+        preloadPromise = null;
+        console.log('✅ Ad preloaded - showing immediately');
+        
+        // Update UI to show ad is ready
+        document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - AD READY`;
+        document.getElementById('countdown').style.display = 'none';
+        document.getElementById('ad-icon').style.display = 'block';
+        
+        // If user already tapped, show ad immediately
+        if (gestureDone) {
+          launchAd();
+        }
+      })
+      .catch((err) => {
+        adLoading = false;
+        preloadPromise = null;
+        console.log('⚠️ Preload failed, waiting...', err);
+      });
+  }
+
+  function handleNoAdAvailable() {
+    clearInterval(checkInterval);
+    adReady = true;
+    
+    // Remove overlay if still present
+    const overlay = document.getElementById('tap-overlay');
+    if (overlay && !gestureDone) {
+      overlay.style.transition = 'opacity .3s ease';
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.remove(), 320);
+    }
+    
+    // Proceed to next step or fallback
+    if (currentPhase === 1) {
+      showPhaseTransitionUI();
+    } else {
+      unlockDirectly();
     }
   }
 
   function resetPhase() {
     adReady = false;
     adUnlocked = false;
+    adLoading = false;
+    preloadPromise = null;
     checkAttempts = 0;
     phaseStartTime = Date.now();
     
+    // Reset UI
     document.getElementById('countdown').style.display = 'block';
-    document.getElementById('countdown').innerText = PHASE_DURATION;
+    document.getElementById('countdown').innerText = MAX_WAIT_SECONDS;
     document.getElementById('ad-icon').style.display = 'none';
     document.getElementById('success-icon').style.display = 'none';
     document.getElementById('progress-wrap').style.display = 'none';
@@ -363,29 +389,39 @@
     document.getElementById('btn-next-phase').style.display = 'none';
     document.getElementById('btn-enroll').style.display = 'none';
     
-    document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - WAITING`;
+    document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - CHECKING`;
     document.getElementById('title').innerText = `Preparing Phase ${currentPhase}...`;
-    document.getElementById('description').innerText = `Please wait ${PHASE_DURATION} seconds before watching ad ${currentPhase} of ${REQUIRED_ADS}.`;
+    document.getElementById('description').innerText = `Checking for ad ${currentPhase} of ${REQUIRED_ADS}...`;
     
+    // Restart check loop
     clearInterval(checkInterval);
-    checkInterval = setInterval(updateLogic, 500);
+    startAdCheckLoop();
   }
 
   function launchAd() {
+    if (adLoading) return;
+    
     document.getElementById('countdown').style.display = 'none';
     document.getElementById('ad-icon').style.display = 'block';
-    document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - AD READY`;
+    document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - SHOWING`;
     document.getElementById('title').innerText = `Watch Ad ${currentPhase} of ${REQUIRED_ADS}`;
-    document.getElementById('description').innerText = 'Loading your sponsored video, please wait.';
+    document.getElementById('description').innerText = 'Loading your sponsored video...';
     document.getElementById('progress-wrap').style.display = 'block';
 
+    // Progress animation
     let p = 0;
-    const pIv = setInterval(() => { p += 2; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 200);
+    const pIv = setInterval(() => { 
+      p += 3; 
+      if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; 
+    }, 150);
 
-    if (adController && typeof adController.loadAd === 'function') {
-      adController.loadAd()
-        .then(() => adController.showAd())
-        .then(() => clearInterval(pIv))
+    if (adController && typeof adController.showAd === 'function') {
+      adController.showAd()
+        .then(() => {
+          clearInterval(pIv);
+          document.getElementById('progress-bar').style.width = '100%';
+          // onShowReward callback will handle completion
+        })
         .catch(err => {
           clearInterval(pIv);
           handleAdError(err);
@@ -404,12 +440,13 @@
       document.getElementById('countdown').innerText = '!';
       document.getElementById('status-text').innerText = 'AD SKIPPED';
       document.getElementById('title').innerText = 'Action Required!';
-      document.getElementById('description').innerText = `Please watch the full ad ${currentPhase} to proceed.`;
+      document.getElementById('description').innerText = `Please watch ad ${currentPhase} to proceed.`;
       document.getElementById('progress-wrap').style.display = 'none';
+      
       const btn = document.getElementById('btn-watch');
       btn.style.display = 'flex';
       btn.disabled = false;
-      document.getElementById('btn-text').innerText = `▶ Watch Ad ${currentPhase} to Continue`;
+      document.getElementById('btn-text').innerText = `▶ Watch Ad ${currentPhase}`;
       btn.onclick = () => handleWatchAd(currentPhase);
     } else {
       onAdCompleted(); // Fallback for other errors
@@ -418,7 +455,11 @@
 
   function onAdCompleted() {
     adsWatched++;
-    adsWatched < REQUIRED_ADS ? showPhaseTransitionUI() : unlockDirectly();
+    if (adsWatched < REQUIRED_ADS) {
+      showPhaseTransitionUI();
+    } else {
+      unlockDirectly();
+    }
   }
 
   function showPhaseTransitionUI() {
@@ -434,7 +475,7 @@
     
     document.getElementById('status-text').innerText = `PHASE ${currentPhase}/${REQUIRED_ADS} - COMPLETE`;
     document.getElementById('title').innerText = `✅ Phase ${currentPhase} Complete!`;
-    document.getElementById('description').innerText = `Great progress! Click below to proceed to the final step and unlock your course.`;
+    document.getElementById('description').innerText = `Click below to proceed to the final step.`;
   }
 
   function startPhase2() {
@@ -446,11 +487,11 @@
   async function handleWatchAd(phase = currentPhase) {
     const btn = document.getElementById('btn-watch');
     btn.disabled = true;
-    document.getElementById('btn-text').innerText = `Loading ad ${phase}...`;
+    document.getElementById('btn-text').innerText = `Loading...`;
     document.getElementById('progress-wrap').style.display = 'block';
 
     let p = 0;
-    const pIv = setInterval(() => { p += 2; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 200);
+    const pIv = setInterval(() => { p += 3; if (p <= 95) document.getElementById('progress-bar').style.width = p + '%'; }, 150);
 
     try {
       if (adController) {
@@ -479,7 +520,7 @@
     document.getElementById('status-box').style.color = 'var(--success)';
 
     document.getElementById('title').innerText = 'Ready to Begin!';
-    document.getElementById('description').innerText = 'Verification complete. You now have full access to your course.';
+    document.getElementById('description').innerText = 'Verification complete. You now have full access.';
 
     document.getElementById('btn-watch').style.display = 'none';
     document.getElementById('btn-next-phase').style.display = 'none';
