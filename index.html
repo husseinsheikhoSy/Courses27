@@ -11,7 +11,6 @@
 
   <style>
     :root {
-      /* Default fallback colors */
       --tg-bg: #030712;
       --tg-card-bg: rgba(17, 24, 39, 0.85);
       --tg-text: #f9fafb;
@@ -36,7 +35,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+      padding: calc(env(safe-area-inset-top) + 8px) 16px calc(env(safe-area-inset-bottom) + 8px);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
       overflow-x: hidden;
     }
@@ -49,7 +48,7 @@
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--tg-border);
       border-radius: 28px;
-      padding: 28px 24px;
+      padding: 28px 24px 24px;
       box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.45);
       text-align: center;
       position: relative;
@@ -226,7 +225,6 @@
       gap: 5px;
     }
 
-    /* Telegram-specific optimizations */
     @media (max-width: 360px) {
       .container { padding: 24px 20px; border-radius: 24px; }
       h1 { font-size: 20px; }
@@ -234,11 +232,9 @@
       .timer-text { font-size: 32px; }
     }
 
-    /* Smooth appearance animations */
     .fade-in { animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     
-    /* Hide scrollbar but allow scroll */
     ::-webkit-scrollbar { width: 0; height: 0; }
     * { scrollbar-width: none; -ms-overflow-style: none; }
   </style>
@@ -285,39 +281,93 @@
 </div>
 
 <script>
-  // 📱 Telegram WebApp Initialization
+  // 📱 Telegram WebApp Initialization - FIXED & ENHANCED
   const tg = window.Telegram?.WebApp || null;
+  let tgReady = false;
   
   function initTelegram() {
-    if (!tg) return;
-    
-    tg.ready();
-    tg.expand?.();
-    
-    // Apply Telegram theme colors dynamically
-    if (tg.themeParams) {
-      const { 
-        bg_color, text_color, hint_color, 
-        button_color, button_text_color, secondary_bg_color 
-      } = tg.themeParams;
-      
-      document.documentElement.style.setProperty('--tg-bg', bg_color || '#030712');
-      document.documentElement.style.setProperty('--tg-text', text_color || '#f9fafb');
-      document.documentElement.style.setProperty('--tg-hint', hint_color || '#9ca3af');
-      document.documentElement.style.setProperty('--tg-button', button_color || '#8b5cf6');
-      document.documentElement.style.setProperty('--tg-button-text', button_text_color || '#ffffff');
-      document.documentElement.style.setProperty('--tg-card-bg', secondary_bg_color || 'rgba(17, 24, 39, 0.85)');
-      
-      // Update meta theme-color for better OS integration
-      const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme) metaTheme.content = bg_color || '#030712';
+    if (!tg) {
+      console.warn('⚠️ Running outside Telegram WebApp');
+      tgReady = true;
+      startAppLogic();
+      return;
     }
     
-    // Enable native back button handling (optional)
-    // tg.BackButton?.hide();
+    // Essential Telegram setup
+    tg.ready();
+    tg.expand?.();
+    tg.disableVerticalSwipes?.();
+    
+    // Apply Telegram theme colors
+    if (tg.themeParams) {
+      const { bg_color, text_color, hint_color, button_color, button_text_color, secondary_bg_color } = tg.themeParams;
+      if (bg_color) document.documentElement.style.setProperty('--tg-bg', bg_color);
+      if (text_color) document.documentElement.style.setProperty('--tg-text', text_color);
+      if (hint_color) document.documentElement.style.setProperty('--tg-hint', hint_color);
+      if (button_color) document.documentElement.style.setProperty('--tg-button', button_color);
+      if (button_text_color) document.documentElement.style.setProperty('--tg-button-text', button_text_color);
+      if (secondary_bg_color) document.documentElement.style.setProperty('--tg-card-bg', secondary_bg_color);
+      
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme && bg_color) metaTheme.content = bg_color;
+    }
+    
+    // Setup MainButton with progress support
+    if (tg.MainButton) {
+      tg.MainButton.params.color = tg.themeParams?.button_color || '#8b5cf6';
+      tg.MainButton.params.text_color = tg.themeParams?.button_text_color || '#ffffff';
+      tg.MainButton.params.is_visible = false;
+      tg.MainButton.params.is_active = false;
+      
+      // Handle MainButton click
+      tg.MainButton.onClick(() => {
+        if (currentPhase === 1 && !adUnlocked) {
+          // Phase 1: Go to phase 2 or launch ad
+          if (adReady) {
+            launchAd();
+          } else {
+            startPhase2();
+          }
+        } else if (currentPhase === 2 && !adUnlocked) {
+          // Phase 2: Launch ad or unlock
+          if (adReady) {
+            launchAd();
+          } else {
+            unlockDirectly();
+          }
+        } else if (adUnlocked) {
+          // Final: Go to course
+          goToCourse();
+        }
+      });
+    }
+    
+    tgReady = true;
+    
+    // Start app logic immediately after TG init
+    startAppLogic();
   }
-  
-  initTelegram();
+
+  // 🚀 Main App Logic - Called immediately
+  function startAppLogic() {
+    phaseStartTime = Date.now();
+    updateCountdownUI(MAX_WAIT_SECONDS); // ✅ Immediate update to fix stuck counter
+    initializeTads();
+    
+    if (tg?.HapticFeedback) {
+      tg.HapticFeedback.impactOccurred('light');
+    }
+  }
+
+  // ⏱️ FIXED: Countdown update function with immediate render
+  function updateCountdownUI(seconds) {
+    const el = document.getElementById('countdown');
+    if (el) {
+      el.textContent = seconds > 0 ? seconds : '0';
+      // Force reflow to ensure update in Telegram WebView
+      void el.offsetHeight;
+    }
+  }
 
   // ⚙️ TADS Configuration
   const WIDGET_ID = "9605";
@@ -336,6 +386,7 @@
   let checkAttempts = 0;
   let checkInterval = null;
   let preloadPromise = null;
+  let countdownInterval = null; // ✅ Separate interval for countdown
 
   // Multi-Ad System
   const REQUIRED_ADS = 2;
@@ -369,15 +420,12 @@
   }
   const COURSE_URL = getCourseUrl();
 
-  window.addEventListener('load', () => {
-    phaseStartTime = Date.now();
-    initializeTads();
-    
-    // Haptic feedback for better UX (if supported)
-    if (tg?.HapticFeedback) {
-      tg.HapticFeedback.impactOccurred('light');
-    }
-  });
+  // Initialize Telegram ASAP
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTelegram);
+  } else {
+    initTelegram();
+  }
 
   function initializeTads() {
     if (window.tads && typeof window.tads.init === 'function') {
@@ -418,15 +466,36 @@
     }
   }
 
+  // ✅ FIXED: Separate countdown timer that runs independently
+  function startCountdownTimer() {
+    // Clear any existing countdown
+    if (countdownInterval) clearInterval(countdownInterval);
+    
+    let secondsLeft = MAX_WAIT_SECONDS;
+    updateCountdownUI(secondsLeft);
+    
+    countdownInterval = setInterval(() => {
+      secondsLeft--;
+      updateCountdownUI(secondsLeft);
+      
+      if (secondsLeft <= 0) {
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  }
+
   function startAdCheckLoop() {
+    // ✅ Start countdown immediately and independently
+    startCountdownTimer();
+    
     checkAttempts = 0;
     checkInterval = setInterval(() => {
       checkAttempts++;
       const elapsed = Math.floor((Date.now() - phaseStartTime) / 1000);
       const secondsLeft = Math.max(0, MAX_WAIT_SECONDS - elapsed);
       
+      // Update status text (not countdown - that's handled separately)
       if (!adReady && !adLoading) {
-        document.getElementById('countdown').textContent = secondsLeft;
         document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • CHECKING`;
       }
 
@@ -448,6 +517,14 @@
     if (!adController || adLoading) return;
     
     adLoading = true;
+    
+    // Update MainButton to show it's loading
+    if (tg?.MainButton) {
+      tg.MainButton.setText(`Loading Ad ${currentPhase}...`);
+      tg.MainButton.show();
+      tg.MainButton.params.is_active = false;
+    }
+    
     preloadPromise = adController.loadAd()
       .then(() => {
         adReady = true;
@@ -459,21 +536,49 @@
         document.getElementById('countdown').style.display = 'none';
         document.getElementById('ad-icon').style.display = 'flex';
         
-        // Auto-launch if ad is ready
-        if (adReady && !adUnlocked) {
-          setTimeout(launchAd, 300);
+        // Update MainButton for ad ready state
+        if (tg?.MainButton) {
+          tg.MainButton.setText(`▶ Watch Ad ${currentPhase}/${REQUIRED_ADS}`);
+          tg.MainButton.params.is_active = true;
+          tg.MainButton.show();
         }
+        
+        // Auto-launch after short delay for better UX
+        setTimeout(() => {
+          if (adReady && !adUnlocked) {
+            launchAd();
+          }
+        }, 500);
       })
       .catch((err) => {
         adLoading = false;
         preloadPromise = null;
         console.log('⚠️ Preload failed:', err);
+        
+        // Fallback: enable MainButton to proceed manually
+        if (tg?.MainButton) {
+          tg.MainButton.setText(`Continue to Step ${currentPhase + 1}`);
+          tg.MainButton.params.is_active = true;
+          tg.MainButton.show();
+        }
       });
   }
 
   function handleNoAdAvailable() {
     clearInterval(checkInterval);
+    if (countdownInterval) clearInterval(countdownInterval);
     adReady = true;
+    
+    // Update MainButton for fallback
+    if (tg?.MainButton) {
+      if (currentPhase === 1) {
+        tg.MainButton.setText('Continue to Final Step →');
+      } else {
+        tg.MainButton.setText('Get Access Now 🚀');
+      }
+      tg.MainButton.params.is_active = true;
+      tg.MainButton.show();
+    }
     
     if (currentPhase === 1) {
       showPhaseTransitionUI();
@@ -490,7 +595,7 @@
     checkAttempts = 0;
     phaseStartTime = Date.now();
     
-    // Reset UI elements
+    // Reset UI
     document.getElementById('countdown').style.display = 'flex';
     document.getElementById('countdown').textContent = MAX_WAIT_SECONDS;
     document.getElementById('ad-icon').style.display = 'none';
@@ -504,12 +609,23 @@
     document.getElementById('title').textContent = `Preparing Phase ${currentPhase}...`;
     document.getElementById('description').textContent = `Checking for ad ${currentPhase} of ${REQUIRED_ADS}...`;
     
+    // Hide MainButton during reset
+    if (tg?.MainButton) {
+      tg.MainButton.hide();
+    }
+    
     clearInterval(checkInterval);
+    if (countdownInterval) clearInterval(countdownInterval);
     startAdCheckLoop();
   }
 
   function launchAd() {
     if (adLoading) return;
+    
+    // Hide MainButton during ad playback
+    if (tg?.MainButton) {
+      tg.MainButton.hide();
+    }
     
     document.getElementById('countdown').style.display = 'none';
     document.getElementById('ad-icon').style.display = 'flex';
@@ -557,13 +673,20 @@
       btn.disabled = false;
       document.getElementById('btn-text').textContent = `▶ Watch Ad ${currentPhase}`;
       btn.onclick = () => handleWatchAd(currentPhase);
+      
+      // Show MainButton as retry option
+      if (tg?.MainButton) {
+        tg.MainButton.setText(`Retry Ad ${currentPhase}`);
+        tg.MainButton.params.is_active = true;
+        tg.MainButton.show();
+      }
     } else {
       onAdCompleted();
     }
   }
 
   function onAdCompleted() {
-    // Haptic feedback on completion
+    // Haptic feedback
     if (tg?.HapticFeedback) {
       tg.HapticFeedback.notificationOccurred('success');
     }
@@ -588,12 +711,18 @@
     nextBtn.disabled = false;
     
     document.getElementById('status-text').textContent = `PHASE ${currentPhase}/${REQUIRED_ADS} • COMPLETE`;
-    document.getElementById('title'].textContent = `✅ Phase ${currentPhase} Complete!`;
+    document.getElementById('title').textContent = `✅ Phase ${currentPhase} Complete!`;
     document.getElementById('description').textContent = `Click below to proceed to the final step.`;
+    
+    // Update MainButton for phase transition
+    if (tg?.MainButton) {
+      tg.MainButton.setText(`Continue to Phase ${currentPhase + 1} →`);
+      tg.MainButton.params.is_active = true;
+      tg.MainButton.show();
+    }
   }
 
   function startPhase2() {
-    // Haptic feedback
     if (tg?.HapticFeedback) {
       tg.HapticFeedback.impactOccurred('medium');
     }
@@ -649,14 +778,20 @@
     document.getElementById('progress-wrap').style.display = 'none';
     document.getElementById('btn-enroll').style.display = 'flex';
     
-    // Final haptic feedback
+    // Update MainButton for final action
+    if (tg?.MainButton) {
+      tg.MainButton.setText('🚀 ENROLL NOW FOR FREE');
+      tg.MainButton.params.color = tg.themeParams?.button_color || '#10b981';
+      tg.MainButton.params.is_active = true;
+      tg.MainButton.show();
+    }
+    
     if (tg?.HapticFeedback) {
       tg.HapticFeedback.notificationOccurred('success');
     }
   }
 
   function goToCourse() {
-    // Haptic feedback before navigation
     if (tg?.HapticFeedback) {
       tg.HapticFeedback.impactOccurred('heavy');
     }
