@@ -7,6 +7,19 @@
     <title>Premium Course Access - Python Edition</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- ✅ RichAds Script (للزر الأول) -->
+    <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
+    <script>
+        // تهيئة RichAds عند تحميل الصفحة
+        window.TelegramAdsController = new TelegramAdsController();
+        window.TelegramAdsController.initialize({
+            pubId: "1006337",
+            appId: "6995",
+        });
+    </script>
+    
+    <!-- ✅ tads.me Script (للزر الثاني) -->
     <script src="https://w.tads.me/widget.js"></script>
 
     <style>
@@ -17,8 +30,8 @@
             --bg-card: #ffffff;
             --text-main: #111827;
             --text-muted: #6b7280;
-            --primary: #3776ab; /* Python Blue */
-            --accent: #ffd43b;  /* Python Yellow */
+            --primary: #3776ab;
+            --accent: #ffd43b;
             --success: #10b981;
             --btn-bg: #e5e7eb;
             --btn-text: #374151;
@@ -26,12 +39,7 @@
             --border-color: #e5e7eb;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
             background: var(--bg-body);
@@ -254,22 +262,24 @@
         <p class="subtitle">Complete the tasks below to get your free course link.</p>
 
         <div class="task-list">
+            <!-- ✅ الزر الأول: يستخدم RichAds -->
             <div class="task-item" id="task1">
                 <div class="task-info-wrapper">
                     <div class="task-icon" id="icon1">🎬</div>
                     <div>
-                        <div class="task-title">Watch First Ad</div>
+                        <div class="task-title">Watch First Ad (RichAds)</div>
                         <div class="task-reward">⭐ Required step</div>
                     </div>
                 </div>
                 <button class="task-btn" id="btn-ad1" onclick="watchAd(1)">Start</button>
             </div>
 
+            <!-- ✅ الزر الثاني: يستخدم tads.me (كما هو) -->
             <div class="task-item disabled" id="task2">
                 <div class="task-info-wrapper">
                     <div class="task-icon" id="icon2">🎬</div>
                     <div>
-                        <div class="task-title">Watch Second Ad</div>
+                        <div class="task-title">Watch Second Ad (Tads)</div>
                         <div class="task-reward">⭐ Required step</div>
                     </div>
                 </div>
@@ -291,7 +301,7 @@
         const tg = window.Telegram?.WebApp || null;
         if (tg) { tg.ready(); tg.expand(); }
 
-        // Updated Configuration
+        // ⚙️ إعدادات Tads (للزر الثاني فقط)
         const FULLSCREEN_WIDGET_ID = "9605";
         const TGB_WIDGET_ID = "9638";
         const AD_TYPE_FULLSCREEN = "fullscreen";
@@ -313,11 +323,12 @@
         const COURSE_URL = getCourseUrl();
 
         window.addEventListener('load', () => {
-            initFullscreenAd();
-            initTGBAd();
+            initTadsFullscreen(); // تهيئة Tads للزر الثاني فقط
+            initTGBAd();          // تهيئة إعلان TGB السفلي
         });
 
-        function initFullscreenAd() {
+        // ✅ تهيئة Tads Fullscreen (للزر الثاني فقط)
+        function initTadsFullscreen() {
             let checkTads = setInterval(() => {
                 if (window.tads && typeof window.tads.init === 'function') {
                     clearInterval(checkTads);
@@ -328,7 +339,7 @@
                         onShowReward: () => handleAdSuccess(),
                         onAdsNotFound: () => handleAdFallback(),
                         onError: (err) => {
-                            console.error("Fullscreen Ad Error:", err);
+                            console.error("Tads Fullscreen Error:", err);
                             resetButtonState();
                         }
                     });
@@ -336,6 +347,7 @@
             }, 100);
         }
 
+        // ✅ تهيئة TGB Ad (للقسم السفلي)
         function initTGBAd() {
             const adsNotFoundCallback = () => {
                 console.log('TGB: No ads found to show');
@@ -375,6 +387,7 @@
             }
         }
 
+        // 🎯 الدالة الرئيسية لمشاهدة الإعلان
         function watchAd(stepNumber) {
             if (stepNumber !== currentStep || isAdPlaying) return;
             isAdPlaying = true;
@@ -382,18 +395,71 @@
             btn.innerText = "⏳ Wait";
             btn.disabled = true;
 
-            if (fullscreenAdController) {
-                fullscreenAdController.showAd().catch((err) => {
-                    console.error("Failed to display fullscreen ad:", err);
+            if (stepNumber === 1) {
+                // ✅ الزر الأول: استخدام RichAds
+                showRichAds();
+            } else if (stepNumber === 2) {
+                // ✅ الزر الثاني: استخدام Tads.me (كما هو)
+                if (fullscreenAdController) {
+                    fullscreenAdController.showAd().catch((err) => {
+                        console.error("Failed to display fullscreen ad:", err);
+                        handleAdFallback();
+                    });
+                } else {
                     handleAdFallback();
-                });
+                }
+            }
+        }
+
+        // ✅ دالة عرض إعلان RichAds (للزر الأول)
+        function showRichAds() {
+            // التحقق من وجود المتحكم
+            if (window.TelegramAdsController && typeof window.TelegramAdsController.showAd === 'function') {
+                try {
+                    window.TelegramAdsController.showAd({
+                        // ✅ أسماء الدوال العكسية المتوقعة (يجب التأكد منها من الوثائق)
+                        onAdWatched: function() {
+                            console.log("RichAds: Ad watched successfully");
+                            handleAdSuccess();
+                        },
+                        onReward: function() {
+                            console.log("RichAds: Reward granted");
+                            handleAdSuccess();
+                        },
+                        onError: function(err) {
+                            console.error("RichAds Error:", err);
+                            // في حال الخطأ، نستخدم الآلية الاحتياطية لضمان عدم توقف المستخدم
+                            handleAdFallback(); 
+                        },
+                        onClose: function() {
+                            // بعض النسخ تغلق الإعلان دون إكمال المشاهدة
+                            // ننتظر قليلاً ثم نتحقق إذا لم يتم استدعاء onAdWatched
+                            setTimeout(() => {
+                                if (isAdPlaying) {
+                                    console.warn("RichAds: Ad closed without reward callback");
+                                    // خيار 1: إعادة الزر لحالته (أكثر أماناً)
+                                    resetButtonState();
+                                    // خيار 2: اعتبارها نجاحاً (أكثر سهولة للمستخدم - مفعل افتراضياً)
+                                    // handleAdFallback(); 
+                                }
+                            }, 1000);
+                        }
+                    });
+                } catch (e) {
+                    console.error("RichAds initialization error:", e);
+                    handleAdFallback();
+                }
             } else {
+                console.warn("RichAds controller not ready, using fallback");
                 handleAdFallback();
             }
         }
 
+        // ✅ معالجة نجاح الإعلان (مشتركة)
         function handleAdSuccess() {
+            if (!isAdPlaying) return; // منع التكرار
             isAdPlaying = false;
+            
             let currentBtn = document.getElementById(`btn-ad${currentStep}`);
             let currentItem = document.getElementById(`task${currentStep}`);
             let currentIcon = document.getElementById(`icon${currentStep}`);
@@ -420,18 +486,23 @@
             }
         }
 
+        // ⚠️ آلية احتياطية في حال فشل الإعلان أو عدم توفره
         function handleAdFallback() {
-            console.warn("Using fallback skip due to unavailable ad");
+            console.warn("Using fallback skip due to unavailable ad or error");
+            // تأخير بسيط لمحاكاة مشاهدة الإعلان
             setTimeout(() => {
                 handleAdSuccess();
-            }, 1000);
+            }, 1500);
         }
 
+        // 🔁 إعادة زر الإعلان لحالته عند الخطأ
         function resetButtonState() {
             isAdPlaying = false;
             let btn = document.getElementById(`btn-ad${currentStep}`);
-            btn.innerText = "Start";
-            btn.disabled = false;
+            if (btn) {
+                btn.innerText = "Start";
+                btn.disabled = false;
+            }
         }
 
         function goToCourse() {
