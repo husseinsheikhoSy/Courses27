@@ -64,10 +64,10 @@
       user-select: none;
     }
     @keyframes cherryFloat {
-      0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0;    }
+      0%   { transform: translateY(110vh) rotate(0deg);  opacity: 0;    }
       5%   { opacity: 0.18; }
       95%  { opacity: 0.18; }
-      100% { transform: translateY(-12vh)  rotate(360deg); opacity: 0; }
+      100% { transform: translateY(-12vh) rotate(360deg); opacity: 0; }
     }
 
     /* ── Top bar ── */
@@ -315,10 +315,51 @@
     #tads-container-9638 { width:100%; min-height:80px; display:flex; align-items:center; justify-content:center; }
     #tads-container-9638:empty { display:none; }
 
+    /* ══ RESPONSIVE BREAKPOINTS ══════════════════════════════ */
+
+    /* شاشات 380px وأقل */
     @media (max-width:380px) {
       .card { padding:16px 14px; }
       .step-btn { padding:7px 11px; font-size:12px; }
       .cta-btn { font-size:15px; }
+    }
+
+    /* شاشات 360px وأقل — Galaxy A series, Moto G */
+    @media (max-width:360px) {
+      .card { padding:14px 12px; }
+      .step-btn { padding:6px 10px; font-size:11px; min-width:56px; }
+      .cta-btn { font-size:14px; padding:14px; }
+      .course-title { font-size:13px; }
+      .step-title { font-size:13px; }
+      .unlock-headline h2 { font-size:15px; }
+      .top-bar { padding:11px 14px 10px; }
+      .logo-text { font-size:13px; }
+    }
+
+    /* شاشات 320px وأقل — iPhone SE الجيل الأول */
+    @media (max-width:320px) {
+      .card { padding:12px 10px; }
+      .course-thumb { width:52px; height:52px; font-size:22px; }
+      .step-num { width:30px; height:30px; font-size:13px; }
+      .countdown-ring { width:30px; height:30px; }
+      .step { padding:10px 10px; gap:8px; }
+      .step-btn { padding:5px 8px; font-size:11px; min-width:48px; }
+      .cta-btn { font-size:13px; padding:13px; }
+      .progress-label { font-size:11px; min-width:24px; }
+    }
+
+    /* ضمان حجم tap target مناسب (44×44px معيار Apple/Google) */
+    .step-btn, .cta-btn {
+      min-height: 44px;
+    }
+
+    /* إيقاف الأنيميشن لمن يفضل ذلك (Accessibility) */
+    @media (prefers-reduced-motion: reduce) {
+      .cherry-pair { animation: none !important; opacity: 0.08; }
+      .card { animation: none; }
+      .progress-bar-fill { transition: none; }
+      .cta-btn.unlocked { animation: none; }
+      .skel-line { animation: none; }
     }
   </style>
 </head>
@@ -750,22 +791,16 @@
   // ── Cherry background ────────────────────────────────────
   (function() {
     const container = document.getElementById('cherry-bg');
-    const CHERRY = '🍒';
-    const COUNT  = 14;
+    const COUNT = 14;
     for (let i = 0; i < COUNT; i++) {
       const el = document.createElement('div');
       el.className = 'cherry-pair';
-      el.textContent = CHERRY;
+      el.textContent = '🍒';
       const size     = 22 + Math.random() * 24;
       const left     = Math.random() * 96;
       const duration = 12 + Math.random() * 18;
       const delay    = Math.random() * 20;
-      el.style.cssText = `
-        left: ${left}%;
-        font-size: ${size}px;
-        animation-duration: ${duration}s;
-        animation-delay: -${delay}s;
-      `;
+      el.style.cssText = `left:${left}%;font-size:${size}px;animation-duration:${duration}s;animation-delay:-${delay}s;`;
       container.appendChild(el);
     }
   })();
