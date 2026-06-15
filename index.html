@@ -14,36 +14,60 @@
 
   <style>
     :root {
-      --brand-pink:        #ff4f9a;
-      --brand-pink-dark:   #d6347c;
-      --brand-purple:      #9b5de0;
-      --brand-purple-dark: #7b2fd4;
-      --brand-gradient:    linear-gradient(135deg, var(--brand-pink), var(--brand-purple));
-      --bg:                #fff5fb;
-      --card:              #ffffff;
-      --text:              #3a2745;
-      --text-muted:        #9a8aa8;
-      --border:            #f8d9ec;
-      --chip-bg:           #fde6f3;
+      --brand-pink:        #e8185a;
+      --brand-pink-dark:   #b50d42;
+      --brand-cherry:      #9b1239;
+      --brand-purple:      #c94070;
+      --brand-purple-dark: #a0123a;
+      --brand-gradient:    linear-gradient(135deg, #e8185a, #9b1239);
+      --bg:                #fff0f5;
+      --card:              rgba(255,255,255,0.93);
+      --text:              #5a0a22;
+      --text-muted:        #b06080;
+      --border:            #f5c0d0;
+      --chip-bg:           #ffe0eb;
       --step-done-bg:      #e8f7ee;
       --step-done-text:    #1e9461;
       --radius-card:       20px;
       --radius-btn:        10px;
-      --shadow-card:       0 4px 24px rgba(214, 52, 124, .15);
+      --shadow-card:       0 4px 24px rgba(155, 18, 57, .18);
     }
 
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
     body {
       font-family: 'Mulish', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: linear-gradient(160deg, #ffe0ec 0%, #ffb8cf 40%, #ff8fb5 70%, #ff6699 100%);
       min-height: 100vh;
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 0 0 32px;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Cherry decorations ── */
+    .cherry-bg {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .cherry-pair {
+      position: absolute;
+      font-size: 28px;
+      animation: cherryFloat linear infinite;
+      opacity: 0.18;
+      user-select: none;
+    }
+    @keyframes cherryFloat {
+      0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0;    }
+      5%   { opacity: 0.18; }
+      95%  { opacity: 0.18; }
+      100% { transform: translateY(-12vh)  rotate(360deg); opacity: 0; }
     }
 
     /* ── Top bar ── */
@@ -52,6 +76,7 @@
       background: var(--brand-gradient);
       padding: 14px 20px 12px;
       display: flex; align-items: center; gap: 10px;
+      position: relative; z-index: 1;
     }
     .logo-u {
       width: 32px; height: 32px; border-radius: 6px;
@@ -79,10 +104,11 @@
       border-radius: var(--radius-card);
       box-shadow: var(--shadow-card);
       padding: 22px 20px;
+      position: relative; z-index: 1;
     }
     .skeleton.visible { display: block; }
     .skel-line {
-      background: linear-gradient(90deg, #f8d9ec 25%, #fdf2f8 50%, #f8d9ec 75%);
+      background: linear-gradient(90deg, #f5c0d0 25%, #ffe0eb 50%, #f5c0d0 75%);
       background-size: 200% 100%;
       border-radius: 6px; margin-bottom: 10px;
       animation: shimmer 1.4s infinite;
@@ -105,6 +131,7 @@
       padding: 22px 20px 20px;
       animation: slideUp .45s cubic-bezier(.22,.61,.36,1) both;
       display: none;
+      position: relative; z-index: 1;
     }
     .card.visible { display: block; }
     @keyframes slideUp {
@@ -239,9 +266,9 @@
       animation: pulsePink 2.2s infinite;
     }
     @keyframes pulsePink {
-      0%  { box-shadow: 0 0 0 0   rgba(214,52,124,.45); }
-      60% { box-shadow: 0 0 0 12px rgba(214,52,124,0);  }
-      100%{ box-shadow: 0 0 0 0   rgba(214,52,124,0);   }
+      0%  { box-shadow: 0 0 0 0   rgba(155,18,57,.5); }
+      60% { box-shadow: 0 0 0 12px rgba(155,18,57,0);  }
+      100%{ box-shadow: 0 0 0 0   rgba(155,18,57,0);   }
     }
 
     /* ── Confetti canvas ── */
@@ -273,6 +300,7 @@
     .ad-section {
       width: calc(100% - 28px); max-width: 440px;
       margin: 16px auto 0;
+      position: relative; z-index: 1;
     }
     .ad-label {
       font-size: 10px; font-weight: 700; color: var(--text-muted);
@@ -295,6 +323,9 @@
   </style>
 </head>
 <body>
+
+  <!-- Cherry floating background -->
+  <div class="cherry-bg" id="cherry-bg"></div>
 
   <!-- Top bar -->
   <div class="top-bar">
@@ -716,6 +747,29 @@
       });
     }
   });
+  // ── Cherry background ────────────────────────────────────
+  (function() {
+    const container = document.getElementById('cherry-bg');
+    const CHERRY = '🍒';
+    const COUNT  = 14;
+    for (let i = 0; i < COUNT; i++) {
+      const el = document.createElement('div');
+      el.className = 'cherry-pair';
+      el.textContent = CHERRY;
+      const size     = 22 + Math.random() * 24;
+      const left     = Math.random() * 96;
+      const duration = 12 + Math.random() * 18;
+      const delay    = Math.random() * 20;
+      el.style.cssText = `
+        left: ${left}%;
+        font-size: ${size}px;
+        animation-duration: ${duration}s;
+        animation-delay: -${delay}s;
+      `;
+      container.appendChild(el);
+    }
+  })();
+
   </script>
 
 </body>
