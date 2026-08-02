@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Courses2027 — Free Course Unlock</title>
+  <title>Courses2027 — Free Courses</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://w.tads.me/widget.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,657 +13,181 @@
 
   <style>
     :root {
-      --brand-pink:        #e8185a;
-      --brand-pink-dark:   #b50d42;
-      --brand-cherry:      #9b1239;
-      --brand-gradient:    linear-gradient(135deg, #e8185a, #9b1239);
-      --bg:                #fff5f8;
-      --card:              #ffffff;
-      --text:              #1c1d1f;
-      --text-muted:        #6a6f73;
-      --border:            #f0dde5;
-      --chip-bg:           #fde6ee;
-      --step-done-bg:      #e6f4ea;
-      --step-done-text:    #1e7e34;
-      --radius-card:       20px;
-      --radius-btn:        10px;
-      --shadow-card:       0 4px 24px rgba(155,18,57,.12);
+      --brand-pink:      #e8185a;
+      --brand-pink-dark: #b50d42;
+      --brand-cherry:    #9b1239;
+      --brand-gradient:  linear-gradient(135deg, #e8185a, #9b1239);
+      --bg:              #fff5f8;
+      --card:            #ffffff;
+      --text:            #1c1d1f;
+      --text-muted:      #6a6f73;
+      --border:          #f0dde5;
+      --chip-bg:         #fde6ee;
+      --radius-card:     18px;
+      --shadow-card:     0 4px 20px rgba(155,18,57,.10);
     }
-
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
     body {
-      font-family: 'Mulish', sans-serif;
+      font-family:'Mulish', sans-serif;
       background: linear-gradient(160deg, #ffe0ec 0%, #ffb8cf 40%, #ff8fb5 70%, #ff6699 100%);
       background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 0 32px;
-      overflow-x: hidden;
-      position: relative;
+      padding-bottom: 32px;
     }
-
-    /* ── Cherry bg ── */
-    .cherry-bg {
-      position: fixed; top:0; left:0;
-      width:100%; height:100%;
-      pointer-events:none; z-index:0; overflow:hidden;
-    }
-    .cherry-pair {
-      position:absolute;
-      animation: cherryFloat linear infinite;
-      opacity:0.15; user-select:none;
-    }
-    @keyframes cherryFloat {
-      0%   { transform:translateY(110vh) rotate(0deg);   opacity:0; }
-      5%   { opacity:0.15; }
-      95%  { opacity:0.15; }
-      100% { transform:translateY(-12vh)  rotate(360deg); opacity:0; }
-    }
-    @media (prefers-reduced-motion:reduce) {
-      .cherry-pair { animation:none; opacity:0.06; }
-      .card { animation:none; }
-      .progress-bar-fill { transition:none; }
-      .cta-btn.unlocked { animation:none; }
-      .skel-line { animation:none; }
-    }
-
-    /* ── Top bar ── */
     .top-bar {
       width:100%; background:var(--brand-gradient);
-      padding:14px 20px 12px;
+      padding:16px 18px 14px;
       display:flex; align-items:center; gap:10px;
-      position:relative; z-index:1;
+      position:sticky; top:0; z-index:5;
     }
-    .logo-u {
-      width:32px; height:32px; border-radius:6px;
-      background:#fff;
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; flex-shrink:0;
-    }
+    .logo-u { width:32px; height:32px; border-radius:6px; background:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
     .logo-text { font-size:15px; font-weight:800; color:#fff; }
-    .badge-free {
-      margin-left:auto;
-      background:#fff; color:var(--brand-pink-dark);
-      font-size:11px; font-weight:800;
-      padding:4px 10px; border-radius:20px;
-    }
+    .badge-free { margin-left:auto; background:#fff; color:var(--brand-pink-dark);
+      font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; }
 
-    /* ── Skeleton ── */
-    .skeleton {
-      display:none;
-      width:calc(100% - 28px); max-width:440px;
-      margin:16px auto 0;
-      background:var(--card);
-      border-radius:var(--radius-card);
-      box-shadow:var(--shadow-card);
-      padding:18px 16px;
-      position:relative; z-index:1;
+    .filters {
+      display:flex; gap:8px; overflow-x:auto; padding:14px 16px 4px;
+      -ms-overflow-style:none; scrollbar-width:none;
     }
-    .skeleton.visible { display:block; }
-    .skel-line {
-      background:linear-gradient(90deg,#f5c0d0 25%,#ffe0eb 50%,#f5c0d0 75%);
-      background-size:200% 100%;
-      border-radius:6px; margin-bottom:9px;
-      animation:shimmer 1.4s infinite;
+    .filters::-webkit-scrollbar { display:none; }
+    .filter-chip {
+      flex-shrink:0; padding:7px 14px; border-radius:20px;
+      font-size:12px; font-weight:800; background:#fff; color:var(--brand-pink-dark);
+      border:1.5px solid var(--border); cursor:pointer; transition:all .2s;
     }
-    @keyframes shimmer {
-      0%   { background-position:200% 0; }
-      100% { background-position:-200% 0; }
-    }
-    .skel-thumb { width:56px; height:56px; border-radius:10px; flex-shrink:0; }
-    .skel-row   { display:flex; gap:10px; margin-bottom:16px; }
-    .skel-lines { flex:1; }
+    .filter-chip.active { background:var(--brand-gradient); color:#fff; border-color:transparent; }
 
-    /* ── Main card ── */
-    .card {
-      width:calc(100% - 28px); max-width:440px;
-      margin:16px auto 0;
-      background:var(--card);
-      border-radius:var(--radius-card);
-      box-shadow:var(--shadow-card);
-      padding:18px 16px 16px;
-      animation:slideUp .4s cubic-bezier(.22,.61,.36,1) both;
-      display:none;
-      position:relative; z-index:1;
-    }
-    .card.visible { display:block; }
-    @keyframes slideUp {
-      from { opacity:0; transform:translateY(16px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
+    .grid { display:flex; flex-direction:column; gap:12px; padding:12px 16px 0; max-width:520px; margin:0 auto; }
 
-    /* ── Course info ── */
-    .course-info {
-      display:flex; gap:10px;
-      margin-bottom:14px; padding-bottom:14px;
-      border-bottom:1px solid var(--border);
+    .course-card {
+      background:var(--card); border-radius:var(--radius-card);
+      box-shadow:var(--shadow-card); overflow:hidden;
+      display:flex; gap:12px; padding:12px; cursor:pointer;
+      text-decoration:none; color:inherit;
+      animation:slideUp .35s ease both;
+      transition:transform .12s;
     }
+    .course-card:active { transform:scale(.98); }
+    @keyframes slideUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+
     .course-thumb {
-      width:56px; height:56px; border-radius:10px;
-      background:var(--brand-gradient);
-      flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
-      font-size:24px; overflow:hidden;
+      width:74px; height:74px; border-radius:12px; flex-shrink:0;
+      background:var(--brand-gradient); overflow:hidden;
+      display:flex; align-items:center; justify-content:center; font-size:26px;
     }
-    .course-thumb img { width:100%; height:100%; object-fit:cover; border-radius:10px; }
-    .course-meta { flex:1; min-width:0; }
+    .course-thumb img { width:100%; height:100%; object-fit:cover; }
+
+    .course-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
     .course-title {
-      font-size:13px; font-weight:800; color:var(--text);
-      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
-      overflow:hidden; margin-bottom:4px; line-height:1.35;
+      font-size:13.5px; font-weight:800; line-height:1.3;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
     }
     .course-tags { display:flex; gap:5px; flex-wrap:wrap; }
-    .tag {
-      font-size:10px; font-weight:700;
-      padding:2px 7px; border-radius:5px;
-      background:var(--chip-bg); color:var(--brand-pink-dark);
-    }
-    .tag.free-tag { background:var(--brand-gradient); color:#fff; }
-    .course-meta-row {
-      font-size:11px; font-weight:700; color:var(--text-muted);
-      line-height:1.6; margin-top:5px;
-    }
-    .course-meta-row:empty { display:none; }
+    .tag { font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:5px; background:var(--chip-bg); color:var(--brand-pink-dark); }
+    .tag.free { background:var(--brand-gradient); color:#fff; }
+    .course-meta-row { font-size:10.5px; font-weight:700; color:var(--text-muted); }
 
-    /* ── Headline ── */
-    .unlock-headline { text-align:center; margin-bottom:4px; }
-    .unlock-headline h2 { font-size:15px; font-weight:900; color:var(--text); line-height:1.3; }
-    .unlock-headline p  { font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.5; }
-
-    /* ── Progress bar ── */
-    .progress-wrap { margin:10px 0; display:flex; align-items:center; gap:8px; }
-    .progress-bar-bg { flex:1; height:6px; background:var(--border); border-radius:10px; overflow:hidden; }
-    .progress-bar-fill {
-      height:100%; background:var(--brand-gradient);
-      border-radius:10px; width:0%;
-      transition:width .5s ease;
+    .empty-state, .loading-state {
+      text-align:center; color:#fff; font-weight:700; font-size:13px;
+      padding:60px 20px; opacity:.9;
     }
-    .progress-label { font-size:11px; font-weight:800; color:var(--brand-pink-dark); min-width:26px; text-align:right; }
-
-    /* ── Steps ── */
-    .steps { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
-    .step {
-      display:flex; align-items:center; gap:10px;
-      background:var(--bg); border:1.5px solid var(--border);
-      border-radius:12px; padding:10px 12px;
-      transition:border-color .3s, background .3s;
+    .skel-card {
+      background:#ffffffaa; border-radius:var(--radius-card); height:98px;
+      animation:shimmer 1.4s infinite ease-in-out; margin-bottom:12px;
     }
-    .step.locked { opacity:.5; pointer-events:none; }
-    .step.done   { border-color:#c3e6cb; background:var(--step-done-bg); }
-
-    .step-num {
-      width:32px; height:32px; border-radius:50%;
-      background:var(--chip-bg); color:var(--brand-pink-dark);
-      display:flex; align-items:center; justify-content:center;
-      font-size:13px; font-weight:900; flex-shrink:0;
-      transition:background .3s, color .3s;
-      position:relative;
-    }
-    .step.done .step-num { background:var(--step-done-text); color:#fff; font-size:16px; }
-
-    .countdown-ring {
-      position:absolute; top:0; left:0;
-      width:32px; height:32px;
-      transform:rotate(-90deg);
-      pointer-events:none;
-      opacity:0; transition:opacity .2s;
-    }
-    .countdown-ring.active { opacity:1; }
-    .countdown-ring circle {
-      fill:none; stroke:var(--brand-pink-dark);
-      stroke-width:3;
-      stroke-dasharray:100;
-      stroke-dashoffset:100;
-      stroke-linecap:round;
-      transition:stroke-dashoffset .95s linear;
-    }
-
-    .step-body { flex:1; min-width:0; }
-    .step-title { font-size:13px; font-weight:800; color:var(--text); }
-    .step.done .step-title { color:var(--step-done-text); }
-    .step-sub   { font-size:10px; color:var(--text-muted); margin-top:2px; }
-
-    .step-btn {
-      background:var(--brand-gradient); color:#fff; border:none;
-      border-radius:var(--radius-btn); padding:7px 13px;
-      font-size:12px; font-weight:800;
-      cursor:pointer; flex-shrink:0;
-      transition:opacity .2s, transform .1s;
-      min-width:60px; min-height:36px; text-align:center;
-    }
-    .step-btn:active  { transform:scale(.96); }
-    .step-btn:disabled { background:#f3cfe6; cursor:not-allowed; }
-    .step-btn.watching { background:#f59e0b; pointer-events:none; }
-    .step-btn.done-mark {
-      background:transparent; color:var(--step-done-text);
-      font-size:18px; pointer-events:none; padding:0 10px;
-    }
-
-    /* ── CTA ── */
-    .cta-btn {
-      width:100%; padding:13px; border-radius:12px; border:none;
-      font-size:14px; font-weight:900; cursor:pointer;
-      display:flex; align-items:center; justify-content:center; gap:7px;
-      min-height:44px;
-      transition:all .3s;
-    }
-    .cta-btn.locked  { background:var(--border); color:var(--text-muted); cursor:not-allowed; }
-    .cta-btn.unlocked {
-      background:var(--brand-gradient); color:#fff;
-      box-shadow:0 5px 16px -4px rgba(155,18,57,.5);
-      animation:pulsePink 2.2s infinite;
-    }
-    @keyframes pulsePink {
-      0%  { box-shadow:0 0 0 0   rgba(155,18,57,.45); }
-      60% { box-shadow:0 0 0 10px rgba(155,18,57,0);  }
-      100%{ box-shadow:0 0 0 0   rgba(155,18,57,0);   }
-    }
-
-    /* ── Confetti ── */
-    #confetti-canvas {
-      position:fixed; top:0; left:0;
-      width:100%; height:100%;
-      pointer-events:none; z-index:999; display:none;
-    }
-
-    /* ── Success msg ── */
-    .success-msg {
-      display:none; text-align:center;
-      margin-top:10px; padding:10px 14px;
-      background:var(--step-done-bg);
-      border:1.5px solid #c3e6cb;
-      border-radius:10px;
-      font-size:12px; font-weight:700;
-      color:var(--step-done-text);
-      animation:fadeIn .4s ease;
-    }
-    .success-msg.visible { display:block; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
-
-    /* ── TGB ad ── */
-    .ad-section {
-      width:calc(100% - 28px); max-width:440px;
-      margin:12px auto 0;
-      position:relative; z-index:1;
-    }
-    .ad-label {
-      font-size:10px; font-weight:700; color:var(--text-muted);
-      text-transform:uppercase; letter-spacing:.8px;
-      text-align:center; margin-bottom:6px;
-    }
-    .ad-slot {
-      width:100%; min-height:70px; border-radius:12px; overflow:hidden;
-      display:flex; align-items:center; justify-content:center;
-      background:var(--card); box-shadow:0 2px 8px rgba(0,0,0,.05);
-    }
-    #tads-container-9638 { width:100%; min-height:70px; display:flex; align-items:center; justify-content:center; }
-    #tads-container-9638:empty { display:none; }
-
-    /* ── Responsive ── */
-    @media (max-width:380px) {
-      .card { padding:14px 13px; }
-      .step-btn { padding:6px 10px; font-size:11px; }
-      .cta-btn  { font-size:13px; }
-    }
-    @media (max-width:360px) {
-      .card { padding:12px 11px; }
-      .course-thumb { width:48px; height:48px; font-size:20px; }
-      .course-title { font-size:12px; }
-      .step-btn { padding:5px 9px; font-size:11px; min-width:52px; }
-      .cta-btn  { font-size:12px; padding:11px; }
-      .unlock-headline h2 { font-size:14px; }
-      .step { padding:9px 10px; }
-    }
-    @media (max-width:320px) {
-      .card { padding:10px 9px; }
-      .course-thumb { width:42px; height:42px; font-size:18px; }
-      .step-num  { width:28px; height:28px; font-size:12px; }
-      .countdown-ring { width:28px; height:28px; }
-      .step-btn  { padding:5px 7px; min-width:46px; }
-      .cta-btn   { font-size:12px; padding:10px; }
-    }
+    @keyframes shimmer { 0%,100%{opacity:.5;} 50%{opacity:.9;} }
   </style>
 </head>
 <body>
 
-  <div class="cherry-bg" id="cherry-bg"></div>
-
   <div class="top-bar">
     <div class="logo-u"><span>🎓</span></div>
-    <span class="logo-text">Courses2027 Free Access</span>
+    <span class="logo-text">Courses2027 — Free Courses</span>
     <span class="badge-free">FREE</span>
   </div>
 
-  <div class="skeleton visible" id="skeleton">
-    <div class="skel-row">
-      <div class="skel-line skel-thumb"></div>
-      <div class="skel-lines">
-        <div class="skel-line" style="height:13px;width:80%;"></div>
-        <div class="skel-line" style="height:10px;width:55%;margin-top:6px;"></div>
-        <div class="skel-line" style="height:10px;width:40%;margin-top:5px;"></div>
-      </div>
-    </div>
-    <div class="skel-line" style="height:14px;width:60%;margin:0 auto 9px;"></div>
-    <div class="skel-line" style="height:9px;width:90%;margin:0 auto 16px;"></div>
-    <div class="skel-line" style="height:50px;border-radius:12px;"></div>
-    <div class="skel-line" style="height:50px;border-radius:12px;"></div>
-    <div class="skel-line" style="height:46px;border-radius:12px;margin-top:4px;"></div>
+  <div class="filters" id="filters">
+    <div class="filter-chip active" data-cat="all">All</div>
+    <div class="filter-chip" data-cat="Data Science">Data Science</div>
+    <div class="filter-chip" data-cat="Programming">Programming</div>
+    <div class="filter-chip" data-cat="Engineering">Engineering</div>
   </div>
 
-  <div class="card" id="main-card">
-
-    <div class="course-info">
-      <div class="course-thumb" id="course-thumb">🎓</div>
-      <div class="course-meta">
-        <div class="course-title" id="course-title">Free Online Course</div>
-        <div class="course-tags">
-          <span class="tag free-tag">100% FREE</span>
-          <span class="tag" id="course-cat">MOOC</span>
-        </div>
-        <div class="course-meta-row" id="course-meta-row"></div>
-      </div>
-    </div>
-
-    <div class="unlock-headline">
-      <h2>Unlock Your Free Course</h2>
-      <p>Watch 2 short ads to activate your enrollment link.</p>
-    </div>
-
-    <div class="progress-wrap">
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progress-fill"></div>
-      </div>
-      <span class="progress-label" id="progress-label">0/2</span>
-    </div>
-
-    <div class="steps">
-      <div class="step" id="step-1">
-        <div class="step-num" id="num-1">
-          1
-          <svg class="countdown-ring" id="ring-1" viewBox="0 0 32 32">
-            <circle cx="16" cy="16" r="13" id="ring-circle-1"/>
-          </svg>
-        </div>
-        <div class="step-body">
-          <div class="step-title">Watch Ad #1</div>
-          <div class="step-sub" id="sub-1">~10 seconds • tads.me</div>
-        </div>
-        <button class="step-btn" id="btn-1" onclick="startStep(1)">Watch</button>
-      </div>
-
-      <div class="step locked" id="step-2">
-        <div class="step-num" id="num-2">
-          2
-          <svg class="countdown-ring" id="ring-2" viewBox="0 0 32 32">
-            <circle cx="16" cy="16" r="13" id="ring-circle-2"/>
-          </svg>
-        </div>
-        <div class="step-body">
-          <div class="step-title">Watch Ad #2</div>
-          <div class="step-sub" id="sub-2">~10 seconds • tads.me</div>
-        </div>
-        <button class="step-btn" id="btn-2" onclick="startStep(2)" disabled>Watch</button>
-      </div>
-    </div>
-
-    <button class="cta-btn locked" id="btn-enroll" disabled>
-      🔒 Complete both steps to continue
-    </button>
-
-    <div class="success-msg" id="success-msg">
-      🎉 You're all set! Tap above to go to your course.
-    </div>
-
+  <div class="grid" id="grid">
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
   </div>
-
-  <div class="ad-section" id="ad-section-wrapper">
-    <div class="ad-label">Sponsored</div>
-    <div class="ad-slot">
-      <div id="tads-container-9638"></div>
-    </div>
-  </div>
-
-  <canvas id="confetti-canvas"></canvas>
 
   <script>
-  const tg = window.Telegram?.WebApp || null;
-  if (tg) { tg.ready(); tg.expand(); }
+    const tg = window.Telegram?.WebApp || null;
+    if (tg) { tg.ready(); tg.expand(); }
 
-  const FULLSCREEN_ID_1 = "9605";
-  const FULLSCREEN_ID_2 = "9970";
-  const TGB_ID          = "9638";
-  const AD_DURATION_SEC = 10;
+    let ALL_COURSES = [];
+    let ACTIVE_CAT = 'all';
 
-  function getCourseUrl() {
-    const param = tg?.initDataUnsafe?.start_param
-               || new URLSearchParams(window.location.search).get('startapp')
-               || new URLSearchParams(window.location.search).get('tgWebAppStartParam');
-    if (!param) return 'https://www.mooc-list.com/';
-    try {
-      const b64 = param.replace(/-/g,'+').replace(/_/g,'/');
-      const decoded = decodeURIComponent(escape(atob(b64)));
-      return decoded.startsWith('http') ? decoded : 'https://www.mooc-list.com/';
-    } catch(e) { return 'https://www.mooc-list.com/'; }
-  }
-
-  function loadCourseMeta() {
-    const p = new URLSearchParams(window.location.search);
-    const title = p.get('title'), img = p.get('img'), cat = p.get('cat'),
-          uni   = p.get('uni'),   date = p.get('date'), dur = p.get('dur');
-    if (title) document.getElementById('course-title').textContent = decodeURIComponent(title);
-    if (img) {
-      const thumb = document.getElementById('course-thumb');
-      const decoded = decodeURIComponent(img);
-      thumb.innerHTML = `<img src="${decoded}" alt="course" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'" />`;
+    function esc(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
-    if (cat) document.getElementById('course-cat').textContent = decodeURIComponent(cat);
-    const metaParts = [];
-    if (date) metaParts.push('📅 ' + decodeURIComponent(date));
-    if (dur)  metaParts.push('⏱ ' + decodeURIComponent(dur));
-    if (uni)  metaParts.push('🏫 ' + decodeURIComponent(uni));
-    document.getElementById('course-meta-row').textContent = metaParts.join('  •  ');
-  }
 
-  const COURSE_URL = getCourseUrl();
-  const CACHE_KEY  = 'c27_progress_' + COURSE_URL.slice(-20);
-  const CACHE_TTL  = 5 * 60 * 1000;
-
-  function loadProgress() {
-    try {
-      const raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return null;
-      const obj = JSON.parse(raw);
-      if (Date.now() - obj.ts > CACHE_TTL) { localStorage.removeItem(CACHE_KEY); return null; }
-      return obj;
-    } catch(e) { return null; }
-  }
-  function saveProgress(s1, s2) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({step1:s1, step2:s2, ts:Date.now()})); } catch(e) {}
-  }
-
-  let step1Done=false, step2Done=false, adController1=null, adController2=null, adPlaying=false;
-
-  function waitForTads(cb) {
-    if (window.tads && typeof window.tads.init==='function') { cb(); return; }
-    const t = setInterval(() => { if (window.tads && typeof window.tads.init==='function') { clearInterval(t); cb(); } }, 80);
-  }
-
-  function initAdControllers() {
-    adController1 = window.tads.init({ widgetId:FULLSCREEN_ID_1, type:'fullscreen', debug:false,
-      onShowReward:()=>onAdComplete(1), onAdsNotFound:()=>onAdFallback(1), onError:()=>onAdFallback(1) });
-    adController2 = window.tads.init({ widgetId:FULLSCREEN_ID_2, type:'fullscreen', debug:false,
-      onShowReward:()=>onAdComplete(2), onAdsNotFound:()=>onAdFallback(2), onError:()=>onAdFallback(2) });
-  }
-
-  function initTGBBanner() {
-    const ctrl = window.tads.init({ widgetId:TGB_ID, type:'static', debug:false, onAdsNotFound:hideTGB });
-    if (ctrl && typeof ctrl.loadAd==='function') ctrl.loadAd().then(()=>ctrl.showAd()).catch(hideTGB);
-  }
-
-  function hideTGB() { const el=document.getElementById('ad-section-wrapper'); if(el) el.style.display='none'; }
-
-  function showCard() {
-    document.getElementById('skeleton').classList.remove('visible');
-    document.getElementById('main-card').classList.add('visible');
-  }
-
-  function startCountdownRing(n) {
-    const ring=document.getElementById(`ring-${n}`);
-    const circle=document.getElementById(`ring-circle-${n}`);
-    const btn=document.getElementById(`btn-${n}`);
-    const sub=document.getElementById(`sub-${n}`);
-    const circumference = 2 * Math.PI * 13;
-    circle.style.strokeDasharray  = circumference;
-    circle.style.strokeDashoffset = circumference;
-    ring.classList.add('active');
-    let remaining = AD_DURATION_SEC;
-    btn.textContent = remaining;
-    const iv = setInterval(() => {
-      remaining--;
-      circle.style.strokeDashoffset = circumference * (1 - (AD_DURATION_SEC-remaining)/AD_DURATION_SEC);
-      if (remaining > 0) { btn.textContent=remaining; sub.textContent=`${remaining}s remaining…`; }
-      else { clearInterval(iv); btn.textContent='⏳'; sub.textContent='Loading…'; }
-    }, 1000);
-    window[`_cd_${n}`] = iv;
-  }
-
-  function stopCountdownRing(n) {
-    clearInterval(window[`_cd_${n}`]);
-    const ring=document.getElementById(`ring-${n}`);
-    if(ring) ring.classList.remove('active');
-  }
-
-  function startStep(n) {
-    if(adPlaying) return;
-    if(n===1 && step1Done) return;
-    if(n===2 && (!step1Done || step2Done)) return;
-    adPlaying=true;
-    const btn=document.getElementById(`btn-${n}`);
-    btn.classList.add('watching');
-    startCountdownRing(n);
-    const controller = n===1 ? adController1 : adController2;
-    if(!controller) { setTimeout(()=>onAdFallback(n), 1200); return; }
-    controller.showAd().catch(()=>onAdFallback(n));
-    window[`_safety_${n}`] = setTimeout(()=>{ if(adPlaying) onAdComplete(n); }, 22000);
-  }
-
-  function onAdComplete(n) {
-    clearTimeout(window[`_safety_${n}`]);
-    stopCountdownRing(n);
-    if(!adPlaying) return;
-    adPlaying=false;
-    const btn=document.getElementById(`btn-${n}`);
-    const step=document.getElementById(`step-${n}`);
-    const num=document.getElementById(`num-${n}`);
-    const sub=document.getElementById(`sub-${n}`);
-    btn.classList.remove('watching');
-    btn.className='step-btn done-mark'; btn.textContent='✓';
-    step.classList.add('done');
-    num.childNodes[0].textContent='✓';
-    sub.textContent='Completed ✓';
-    if(n===1) {
-      step1Done=true; saveProgress(true,false); updateProgress();
-      setTimeout(()=>{
-        document.getElementById('step-2').classList.remove('locked');
-        document.getElementById('btn-2').disabled=false;
-      }, 600);
-    } else {
-      step2Done=true; saveProgress(true,true); updateProgress();
-      unlockEnroll(); launchConfetti();
+    function courseCardHTML(c) {
+      const img = c.image
+        ? `<img src="${esc(c.image)}" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'"/>`
+        : '🎓';
+      const metaParts = [];
+      if (c.duration) metaParts.push('⏱ ' + esc(c.duration));
+      if (c.rating)   metaParts.push('⭐ ' + esc(c.rating));
+      if (c.source)   metaParts.push('🏫 ' + esc(c.source));
+      return `
+        <a class="course-card" href="info.html?id=${encodeURIComponent(c.id)}">
+          <div class="course-thumb">${img}</div>
+          <div class="course-body">
+            <div class="course-title">${esc(c.title)}</div>
+            <div class="course-tags">
+              <span class="tag free">FREE</span>
+              <span class="tag">${esc(c.category || 'Course')}</span>
+            </div>
+            <div class="course-meta-row">${metaParts.join('  •  ')}</div>
+          </div>
+        </a>`;
     }
-  }
 
-  function onAdFallback(n) { setTimeout(()=>onAdComplete(n), 800); }
+    function render() {
+      const grid = document.getElementById('grid');
+      const list = ACTIVE_CAT === 'all'
+        ? ALL_COURSES
+        : ALL_COURSES.filter(c => c.category === ACTIVE_CAT);
 
-  function updateProgress() {
-    const done=(step1Done?1:0)+(step2Done?1:0);
-    document.getElementById('progress-fill').style.width=`${done*50}%`;
-    document.getElementById('progress-label').textContent=`${done}/2`;
-  }
-
-  function unlockEnroll() {
-    const btn=document.getElementById('btn-enroll');
-    btn.disabled=false; btn.className='cta-btn unlocked';
-    btn.innerHTML='🎓 Go to Course';
-    document.getElementById('success-msg').classList.add('visible');
-  }
-
-  function goToCourse() {
-    if(!step1Done || !step2Done) return;
-    if(tg?.openLink) { tg.openLink(COURSE_URL); setTimeout(()=>tg.close(),800); }
-    else window.open(COURSE_URL,'_blank');
-  }
-  document.getElementById('btn-enroll').addEventListener('click', goToCourse);
-
-  function launchConfetti() {
-    const canvas=document.getElementById('confetti-canvas');
-    const ctx=canvas.getContext('2d');
-    canvas.style.display='block';
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight;
-    const colors=['#e8185a','#ffffff','#9b1239','#ffd6e8','#b50d42','#ffb3ce'];
-    const pieces=Array.from({length:80},()=>({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height-canvas.height,
-      r:Math.random()*4+2, d:Math.random()*2+1,
-      color:colors[Math.floor(Math.random()*colors.length)],
-      tilt:Math.random()*10-5,
-      tiltSpeed:(Math.random()*.07+.03)*(Math.random()<.5?1:-1),
-    }));
-    let frame=0;
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      pieces.forEach(p=>{
-        ctx.beginPath(); ctx.fillStyle=p.color;
-        ctx.ellipse(p.x,p.y,p.r,p.r*0.4,p.tilt,0,Math.PI*2); ctx.fill();
-        p.y+=p.d+frame/80; p.tilt+=p.tiltSpeed; p.x+=Math.sin(frame/20)*0.5;
-        if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
-      });
-      frame++;
-      if(frame<150) requestAnimationFrame(draw);
-      else { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.style.display='none'; }
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state">No courses yet — check back soon! 🎓</div>';
+        return;
+      }
+      grid.innerHTML = list.map(courseCardHTML).join('');
     }
-    draw();
-  }
 
-  window.addEventListener('load', () => {
-    loadCourseMeta();
-    const cached=loadProgress();
-    if(cached?.step1 && cached?.step2) {
-      step1Done=true; step2Done=true;
-      showCard(); updateProgress();
-      [1,2].forEach(n=>{
-        const btn=document.getElementById(`btn-${n}`);
-        const step=document.getElementById(`step-${n}`);
-        btn.className='step-btn done-mark'; btn.textContent='✓';
-        step.classList.add('done');
-        document.getElementById(`step-${n}`).classList.remove('locked');
-        document.getElementById(`sub-${n}`).textContent='Completed ✓';
-      });
-      unlockEnroll();
-    } else {
-      showCard();
-      waitForTads(()=>{ initAdControllers(); initTGBBanner(); });
-    }
-  });
+    document.getElementById('filters').addEventListener('click', (e) => {
+      const chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      ACTIVE_CAT = chip.dataset.cat;
+      render();
+    });
 
-  (function() {
-    const container=document.getElementById('cherry-bg');
-    for(let i=0;i<12;i++){
-      const el=document.createElement('div');
-      el.className='cherry-pair';
-      el.textContent='🍒';
-      const size=18+Math.random()*18;
-      const left=Math.random()*96;
-      const duration=14+Math.random()*16;
-      const delay=Math.random()*22;
-      el.style.cssText=`left:${left}%;font-size:${size}px;animation-duration:${duration}s;animation-delay:-${delay}s;`;
-      container.appendChild(el);
+    async function loadCourses() {
+      try {
+        const res = await fetch('courses.json?t=' + Date.now());
+        ALL_COURSES = await res.json();
+      } catch (e) {
+        ALL_COURSES = [];
+      }
+      render();
     }
-  })();
+
+    loadCourses();
   </script>
 
 </body>
