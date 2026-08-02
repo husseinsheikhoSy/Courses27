@@ -126,6 +126,16 @@
     const tg = window.Telegram?.WebApp || null;
     if (tg) { tg.ready(); tg.expand(); }
 
+    // إذا الـ Mini App انفتحت من زر رسالة كورس معيّن بالقناة (startapp=uuid),
+    // BotFather دايمًا بيفتح index.html (الجذر) بغض النظر عن الصفحة المطلوبة —
+    // فلازم نحوّل فورًا لـ info.html بنفس المعرّف بدل ما نعرض القائمة العامة.
+    const DEEP_LINK_ID = tg?.initDataUnsafe?.start_param
+                       || new URLSearchParams(window.location.search).get('startapp')
+                       || new URLSearchParams(window.location.search).get('tgWebAppStartParam');
+    if (DEEP_LINK_ID) {
+      window.location.replace('info.html?id=' + encodeURIComponent(DEEP_LINK_ID));
+    }
+
     let ALL_COURSES = [];
     let ACTIVE_CAT = 'all';
 
@@ -187,7 +197,9 @@
       render();
     }
 
-    loadCourses();
+    if (!DEEP_LINK_ID) {
+      loadCourses();
+    }
   </script>
 
 </body>
