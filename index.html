@@ -126,6 +126,10 @@
     const tg = window.Telegram?.WebApp || null;
     if (tg) { tg.ready(); tg.expand(); }
 
+    // إعدادات Supabase (مفتاح publishable — آمن للاستخدام بالمتصفح)
+    const SUPABASE_URL = 'https://uliqzxsjnzmimebgppap.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_QhO2ft170kcZ1pP8YWl4ZQ_wjhKs5KK';
+
     // إذا الـ Mini App انفتحت من زر رسالة كورس معيّن بالقناة (startapp=uuid),
     // BotFather دايمًا بيفتح index.html (الجذر) بغض النظر عن الصفحة المطلوبة —
     // فلازم نحوّل فورًا لـ info.html بنفس المعرّف بدل ما نعرض القائمة العامة.
@@ -189,8 +193,12 @@
 
     async function loadCourses() {
       try {
-        const res = await fetch('courses.json?t=' + Date.now());
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/courses?select=*&order=created_at.desc&limit=90`,
+          { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+        );
         ALL_COURSES = await res.json();
+        if (!Array.isArray(ALL_COURSES)) ALL_COURSES = [];
       } catch (e) {
         ALL_COURSES = [];
       }
