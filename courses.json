@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "d0a9d19d-8a17-4a86-a9e8-48f32b757b7a",
+    "title": "Foundation of Structural Dynamics",
+    "image_url": "https://d3f1iyfxxz8i1e.cloudfront.net/courses/course-image/foundation-of-structural-dynamics.jpg",
+    "provider": "Coursera",
+    "university": "ISAE-SUPAERO",
+    "rating": "4.5",
+    "duration": "7h",
+    "level": "Intermediate",
+    "start_date": "Self-paced",
+    "categories": [
+      "Science",
+      "Engineering",
+      "Physics"
+    ],
+    "tags": [
+      "Mechanical Engineering"
+    ],
+    "final_url": "https://www.coursera.org/learn/foundation-structural-dynamics"
+  },
+  {
+    "slug": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "title": "Python for Data Science and AI",
+    "image_url": "",
+    "provider": "Coursera",
+    "university": "IBM",
+    "rating": "4.6",
+    "duration": "25h",
+    "level": "Beginner",
+    "start_date": "Self-paced",
+    "categories": [
+      "Technology",
+      "Data Science"
+    ],
+    "tags": [
+      "Python",
+      "AI"
+    ],
+    "final_url": "https://www.coursera.org/learn/python-for-applied-data-science-ai"
+  },
+  {
+    "slug": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+    "title": "Digital Marketing Specialization",
+    "image_url": "",
+    "provider": "Coursera",
+    "university": "University of Illinois",
+    "rating": "4.7",
+    "duration": "8 months",
+    "level": "Beginner",
+    "start_date": "Self-paced",
+    "categories": [
+      "Business",
+      "Marketing"
+    ],
+    "tags": [
+      "Digital Marketing",
+      "SEO"
+    ],
+    "final_url": "https://www.coursera.org/specializations/digital-marketing"
+  }
+]
