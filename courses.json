@@ -1,62 +1,137 @@
 [
   {
-    "slug": "d0a9d19d-8a17-4a86-a9e8-48f32b757b7a",
-    "title": "Foundation of Structural Dynamics",
-    "image_url": "https://d3f1iyfxxz8i1e.cloudfront.net/courses/course-image/foundation-of-structural-dynamics.jpg",
-    "provider": "Coursera",
-    "university": "ISAE-SUPAERO",
+    "id": "58d0d86b-9c03-4366-b07c-72a2189c8e0a",
+    "title": "Impact Evaluation Methods with Applications in Low- and Middle-Income Countries",
+    "image": "https://cdn.edflex.com/media/uploads/mooc/logo/7dee02ba3783c3076cb7ca9fc743fed04aa53c49.jpeg?width=360&height=200",
+    "description": "Economic development is a process of trial and error, innovation and experimentation, success and failure. Given the right institutions, ...",
     "rating": "4.5",
-    "duration": "7h",
-    "level": "Intermediate",
-    "start_date": "Self-paced",
-    "categories": [
-      "Science",
-      "Engineering",
-      "Physics"
+    "duration": "72 h",
+    "source": "www.edx.org",
+    "conditions": [
+      "Self-paced",
+      "Free Access",
+      "Fee-based Certificate"
     ],
-    "tags": [
-      "Mechanical Engineering"
+    "sequences": "24 Sequences",
+    "level": "Introductive Level",
+    "badges": [
+      "Go to main content",
+      "Access to navigation menu",
+      "Go to page footer",
+      "Categories",
+      "Programs",
+      "Leaderboard"
     ],
-    "final_url": "https://www.coursera.org/learn/foundation-structural-dynamics"
+    "course_url": "https://www.my-mooc.com/en/mooc/58d0d86b-9c03-4366-b07c-72a2189c8e0a/",
+    "enroll_url": "https://www.my-mooc.com/resources/58d0d86b-9c03-4366-b07c-72a2189c8e0a/open",
+    "category": "Data Science"
   },
   {
-    "slug": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "title": "Python for Data Science and AI",
-    "image_url": "",
-    "provider": "Coursera",
-    "university": "IBM",
-    "rating": "4.6",
-    "duration": "25h",
-    "level": "Beginner",
-    "start_date": "Self-paced",
-    "categories": [
-      "Technology",
-      "Data Science"
+    "id": "023b7050-275b-42a4-9f96-a0c14b596ba0",
+    "title": "Agile Analytics",
+    "image": "https://cdn.edflex.com/media/uploads/mooc/logo/ac45375f4a487c16c81c639515ef85ba59b6fbcb.jpeg?width=360&height=200",
+    "description": "Few capabilities focus agile like a strong analytics program. Such a program determines where a team should focus from one agile iteratio...",
+    "rating": "4.5",
+    "duration": "15 h",
+    "source": "fr.coursera.org",
+    "conditions": [
+      "Self-paced",
+      "Free Access",
+      "Fee-based Certificate"
     ],
-    "tags": [
-      "Python",
-      "AI"
+    "sequences": "4 Sequences",
+    "level": "Introductive Level",
+    "badges": [
+      "Go to main content",
+      "Access to navigation menu",
+      "Go to page footer",
+      "Categories",
+      "Programs",
+      "Leaderboard"
     ],
-    "final_url": "https://www.coursera.org/learn/python-for-applied-data-science-ai"
+    "course_url": "https://www.my-mooc.com/en/mooc/023b7050-275b-42a4-9f96-a0c14b596ba0/",
+    "enroll_url": "https://www.coursera.org/learn/uva-darden-agile-analytics",
+    "category": "Data Science"
   },
   {
-    "slug": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
-    "title": "Digital Marketing Specialization",
-    "image_url": "",
-    "provider": "Coursera",
-    "university": "University of Illinois",
-    "rating": "4.7",
-    "duration": "8 months",
-    "level": "Beginner",
-    "start_date": "Self-paced",
-    "categories": [
-      "Business",
-      "Marketing"
+    "id": "9bfc916e-16e8-4718-8490-4237fa67915d",
+    "title": "UX Evaluation: User Testing",
+    "image": "https://cdn.edflex.com/media/uploads/mooc/logo/8707ca90acfaab03e248204c860842c290b48be6.png?width=360&height=200",
+    "description": "Testing! 1-2, 1-2! You’re interested in user experience and you have a scientific way of thinking? UX needs you! User testing is an empir...",
+    "rating": "4.5",
+    "duration": "36 h",
+    "source": "www.edx.org",
+    "conditions": [
+      "Self-paced",
+      "Free Access",
+      "Fee-based Certificate"
     ],
-    "tags": [
-      "Digital Marketing",
-      "SEO"
+    "sequences": "6 Sequences",
+    "level": "Intermediate  Level",
+    "badges": [
+      "Go to main content",
+      "Access to navigation menu",
+      "Go to page footer",
+      "Categories",
+      "Programs",
+      "Leaderboard"
     ],
-    "final_url": "https://www.coursera.org/specializations/digital-marketing"
+    "course_url": "https://www.my-mooc.com/en/mooc/9bfc916e-16e8-4718-8490-4237fa67915d/",
+    "enroll_url": "https://www.edx.org/learn/user-experience-ux/hec-montreal-ux-evaluation-user-testing?irclickid=VNDQR9U5JxyZTsqQtr16FTwrUkuSg-VEXScgxY0&utm_source=affiliate&utm_medium=My%20Mooc%20%2F%20Edflex&utm_campaign=Courses%20Ad_&utm_content=PRODUCT_CATALOG&irgwc=1&afsrc=1",
+    "category": "Data Science"
+  },
+  {
+    "id": "d84d8422-995b-4088-8ccf-b30bd2735f37",
+    "title": "UX Data Analysis",
+    "image": "https://cdn.edflex.com/media/uploads/mooc/logo/0f6140deaeaee3919c41265320f941d93c58afed.png?width=360&height=200",
+    "description": "Do big data and UX speak to you? This MOOC will give you the methods and tools to analyze the whole spectrum of data we handle in UX, fro...",
+    "rating": "4.5",
+    "duration": "36 h",
+    "source": "www.edx.org",
+    "conditions": [
+      "Self-paced",
+      "Free Access",
+      "Fee-based Certificate"
+    ],
+    "sequences": "6 Sequences",
+    "level": "Intermediate  Level",
+    "badges": [
+      "Go to main content",
+      "Access to navigation menu",
+      "Go to page footer",
+      "Categories",
+      "Programs",
+      "Leaderboard"
+    ],
+    "course_url": "https://www.my-mooc.com/en/mooc/d84d8422-995b-4088-8ccf-b30bd2735f37/",
+    "enroll_url": "https://www.edx.org/learn/ux-design/hec-montreal-ux-data-analysis?irclickid=VNDQR9U5JxyZTsqQtr16FTwrUkuSg-W4XScgxY0&utm_source=affiliate&utm_medium=My%20Mooc%20%2F%20Edflex&utm_campaign=Courses%20Ad_&utm_content=PRODUCT_CATALOG&irgwc=1&afsrc=1",
+    "category": "Data Science"
+  },
+  {
+    "id": "3651fa6d-96c0-4ff0-8f5f-ab4058fda043",
+    "title": "L’évaluation UX : Tests utilisateurs",
+    "image": "https://cdn.edflex.com/media/uploads/mooc/logo/79712adf6f8cb7547f22b8f7a1f9debdc06e3095.png?width=360&height=200",
+    "description": "L'UX vous intrigue et vous avez un esprit scientifique? L’UX a besoin de vous! L’évaluation UX est une pratique empirique; cette expertis...",
+    "rating": "4.5",
+    "duration": "36 h",
+    "source": "www.edx.org",
+    "conditions": [
+      "Self-paced",
+      "Free Access",
+      "Fee-based Certificate"
+    ],
+    "sequences": "6 Sequences",
+    "level": "Intermediate  Level",
+    "badges": [
+      "Go to main content",
+      "Access to navigation menu",
+      "Go to page footer",
+      "Categories",
+      "Programs",
+      "Leaderboard"
+    ],
+    "course_url": "https://www.my-mooc.com/en/mooc/3651fa6d-96c0-4ff0-8f5f-ab4058fda043/",
+    "enroll_url": "https://www.edx.org/learn/ux-design/hec-montreal-levaluation-ux-tests-utilisateurs?irclickid=VNDQR9U5JxyZTsqQtr16FTwrUkuSg-UsXScgxY0&utm_source=affiliate&utm_medium=My%20Mooc%20%2F%20Edflex&utm_campaign=Courses%20Ad_&utm_content=PRODUCT_CATALOG&irgwc=1&afsrc=1",
+    "category": "Data Science"
   }
 ]
