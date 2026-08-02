@@ -7,6 +7,9 @@
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+  <!-- Adsgram SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
@@ -171,7 +174,7 @@
         </svg>
         <div class="timer-num" id="timer-num">45</div>
       </div>
-      <button class="skip-btn" id="skip-btn">⏭ Skip</button>
+      <button class="skip-btn" id="skip-btn">⚡ Skip with ad</button>
     </div>
 
     <button class="cta-btn locked" id="btn-enroll" disabled>
@@ -196,6 +199,52 @@
 
     const TIMER_SECONDS = 45;
     const RING_CIRCUMFERENCE = 2 * Math.PI * 34; // ≈213.6
+
+    // ── Adsgram — rewarded ad shown when the user taps "Skip with ad" ──
+    const ADSGRAM_BLOCK_ID = '40864';
+    const AD_TIMEOUT_MS = 12000;
+    let adsgramCtrl = null;
+    let skipPlaying  = false;
+
+    function getAdsgram() {
+      if (adsgramCtrl) return adsgramCtrl;
+      if (window.Adsgram && typeof window.Adsgram.init === 'function') {
+        adsgramCtrl = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+      }
+      return adsgramCtrl;
+    }
+
+    // Resolves 'shown' | 'closed_early' | 'no_ad'. Fairness: if no ad was
+    // available at all (SDK missing, no fill, or any real error), that's
+    // not the user's fault, so the caller unlocks instantly anyway.
+    function showAdsgramRewarded() {
+      return new Promise((resolve) => {
+        const ctrl = getAdsgram();
+        if (!ctrl) { resolve('no_ad'); return; }
+
+        let settled = false;
+        const timer = setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          resolve('no_ad');
+        }, AD_TIMEOUT_MS);
+
+        ctrl.show()
+          .then(() => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            resolve('shown');
+          })
+          .catch((result) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            const actuallyPlayed = result && result.state === 'playing';
+            resolve(actuallyPlayed ? 'closed_early' : 'no_ad');
+          });
+      });
+    }
 
     function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -292,8 +341,23 @@
     }
 
     document.getElementById('skip-btn').addEventListener('click', () => {
-      timeLeft = 0;
-      finishTimer();
+      if (skipPlaying) return;
+      skipPlaying = true;
+      const btn = document.getElementById('skip-btn');
+      const prevLabel = btn.textContent;
+      btn.textContent = '⏳';
+
+      showAdsgramRewarded().then((status) => {
+        skipPlaying = false;
+        btn.textContent = prevLabel;
+
+        if (status === 'shown' || status === 'no_ad') {
+          timeLeft = 0;
+          finishTimer();
+        }
+        // 'closed_early' → an ad genuinely started and the user backed out
+        // of it — the normal countdown just keeps running, no shortcut.
+      });
     });
 
     document.getElementById('btn-enroll').addEventListener('click', () => {
