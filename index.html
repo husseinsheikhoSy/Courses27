@@ -1,29 +1,202 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Courses2027 — Free Courses & Deals</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--r:#ed173f;--r2:#b5082d;--r3:#8e0626;--text:#18181b;--muted:#6b6870;--border:#f2d9df}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:Mulish,sans-serif;background:linear-gradient(155deg,#fff4f6,#ffbdc9 50%,#ed173f);min-height:100vh;padding-bottom:32px;color:var(--text)}
-.top{position:sticky;top:0;z-index:5;background:linear-gradient(135deg,var(--r),var(--r3));padding:15px 16px;display:flex;align-items:center;gap:10px}.logo{width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center}.lt{font-weight:900;color:#fff;font-size:15px}.badge{margin-left:auto;background:#fff;color:var(--r2);font-size:10px;font-weight:900;padding:5px 9px;border-radius:18px}
-.filters{display:flex;gap:8px;overflow:auto;padding:14px 15px 5px;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}.chip{flex-shrink:0;background:#fff;border:1px solid var(--border);color:var(--r2);padding:7px 13px;border-radius:22px;font-size:11px;font-weight:900}.chip.active{background:linear-gradient(135deg,var(--r),var(--r3));color:#fff;border-color:transparent}
-.grid{max-width:560px;margin:auto;padding:10px 15px;display:flex;flex-direction:column;gap:12px}.card{background:#fff;border-radius:18px;box-shadow:0 5px 24px #8e062622;padding:12px;display:flex;gap:12px;text-decoration:none;color:inherit}.thumb{width:82px;height:82px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,var(--r),var(--r3));display:flex;align-items:center;justify-content:center;flex-shrink:0}.thumb img{width:100%;height:100%;object-fit:cover}.body{min-width:0;flex:1}.title{font-size:13px;font-weight:900;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}.tag{font-size:9px;font-weight:900;padding:3px 7px;border-radius:5px;background:#ffe4e9;color:var(--r2)}.free{background:linear-gradient(135deg,var(--r),var(--r3));color:#fff}.deal{background:#111;color:#fff}.price{margin-top:6px;font-size:12px;font-weight:900}.old{color:#999;text-decoration:line-through;margin-left:4px}.meta{margin-top:5px;color:var(--muted);font-size:10px;font-weight:800}.state{text-align:center;color:#fff;font-weight:900;padding:60px 20px;font-size:13px}
-</style></head><body>
-<div class="top"><div class="logo">🎓</div><div class="lt">Courses2027 — Free Courses & Deals</div><div class="badge">KORSHUB</div></div>
-<div class="filters" id="filters"><div class="chip active" data-cat="all">All</div><div class="chip" data-cat="Development">Development</div><div class="chip" data-cat="IT & Software">IT & Software</div><div class="chip" data-cat="Data Science">Data Science</div><div class="chip" data-cat="Design">Design</div></div>
-<div class="grid" id="grid"><div class="state">Loading latest courses… 🔥</div></div>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Korshub Deals — Free &amp; Discounted Courses</title>
+<meta name="description" content="Browse fresh free and discounted courses from Udemy, Coursera, Skillshare and more — curated daily." />
+<meta name="theme-color" content="#e30613" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e30613'/%3E%3C/svg%3E" />
+
+<script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+
+<!-- Deep-link routing: startapp=<slug> -> open the course detail page directly -->
 <script>
-const tg=window.Telegram?.WebApp||null;if(tg){tg.ready();tg.expand()}
-const U="https://uliqzxsjnzmimebgppap.supabase.co",K="sb_publishable_QhO2ft170kcZ1pP8YWl4ZQ_wjhKs5KK";let all=[],active="all";
-const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-const money=v=>v==null||v===""?"":(Number.isInteger(Number(v))?"$"+v:"$"+Number(v).toFixed(2));
-function card(c){let img=c.image?`<img src="${esc(c.image)}" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'">`:"🎓";let st=c.is_free?'<span class="tag free">100% FREE</span>':`<span class="tag deal">${esc(c.discount||"DEAL")}</span>`;let p=!c.is_free&&c.price!=null?`<div class="price">${esc(money(c.price))}${c.original_price?` <span class="old">${esc(money(c.original_price))}</span>`:""}</div>`:"";let m=[c.platform,c.rating?"⭐ "+c.rating:"",c.level].filter(Boolean).join(" • ");return `<a class="card" href="info.html?id=${encodeURIComponent(c.id)}"><div class="thumb">${img}</div><div class="body"><div class="title">${esc(c.title)}</div><div class="tags">${st}<span class="tag">${esc(c.category||"Course")}</span></div>${p}<div class="meta">${esc(m)}</div></div></a>`}
-function render(){let a=active==="all"?all:all.filter(x=>x.category===active);grid.innerHTML=a.length?a.map(card).join(""):'<div class="state">No courses found. Check back soon! 🎓</div>'}
-filters.onclick=e=>{let b=e.target.closest(".chip");if(!b)return;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));b.classList.add("active");active=b.dataset.cat;render()};
-const deep=tg?.initDataUnsafe?.start_param||new URLSearchParams(location.search).get("startapp")||new URLSearchParams(location.search).get("tgWebAppStartParam");if(deep)location.replace("info.html?id="+encodeURIComponent(deep));
-async function load(){try{let r=await fetch(`${U}/rest/v1/courses?select=*&order=updated_at.desc,created_at.desc&limit=200`,{headers:{apikey:K,Authorization:`Bearer ${K}`}});all=await r.json();if(!Array.isArray(all))all=[]}catch(e){all=[]}render()}if(!deep)load();
-</script></body></html>
+(function () {
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var qs = new URLSearchParams(window.location.search);
+  var startParam = qs.get('startapp') || qs.get('tgWebAppStartParam') ||
+    (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param);
+  if (!startParam) return;
+  window.location.replace('details.html?id=' + encodeURIComponent(startParam));
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+<style>
+:root{
+  --red:#e30613;
+  --red-bright:#ff1f2e;
+  --red-dark:#a2040d;
+  --red-soft:rgba(227,6,19,.10);
+  --red-glow:rgba(227,6,19,.35);
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#fff5f6;
+  --border:#f1d7d9;
+  --text:#1a0e0f;
+  --text-muted:#8a6a6d;
+  --success:#1fa15a;
+  --gold:#e0a326;
+  --radius-xl:26px;
+  --radius-lg:18px;
+  --radius-md:13px;
+  --shadow:0 18px 45px rgba(227,6,19,.12);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{background:var(--bg);}
+body{
+  font-family:'Inter',sans-serif;
+  min-height:100dvh;color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  overflow-x:hidden;
+}
+.app-shell{width:min(100%,500px);margin:0 auto;min-height:100dvh;background:var(--surface);position:relative;}
+
+.top-bar{
+  position:sticky;top:0;z-index:20;
+  padding:18px 16px 16px;
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);
+  color:#fff;
+  box-shadow:0 10px 26px rgba(227,6,19,.28);
+}
+.logo{width:34px;height:34px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.title-box{flex:1;min-width:0;}
+.title-box h1{font-size:15px;font-weight:800;}
+.title-box p{font-size:11px;opacity:.85;font-weight:600;}
+.count-pill{background:rgba(255,255,255,.18);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:800;}
+
+.grid{display:flex;flex-direction:column;gap:12px;padding:14px 16px 40px;}
+
+.course-card{
+  display:flex;gap:12px;padding:12px;border-radius:var(--radius-lg);
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .12s;
+}
+.course-card:active{transform:scale(.98);}
+.course-thumb{width:76px;height:76px;border-radius:12px;flex-shrink:0;overflow:hidden;background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:26px;}
+.course-thumb img{width:100%;height:100%;object-fit:cover;}
+.course-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;}
+.course-title{font-size:13.5px;font-weight:800;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.course-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:6px;background:var(--surface-2);color:var(--red-dark);border:1px solid var(--border);}
+.tag.free{background:linear-gradient(135deg,var(--success),#17824a);color:#fff;border:none;}
+.tag.discount{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;}
+.price-row{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;}
+.price-old{color:var(--text-muted);text-decoration:line-through;font-weight:700;font-size:11px;}
+.price-now{color:var(--red-dark);}
+.price-now.free-text{color:var(--success);}
+
+.task-card{margin:4px 0;}
+
+.empty-state,.loading-state{text-align:center;color:var(--text-muted);font-weight:700;font-size:13px;padding:60px 20px;}
+.skel-card{background:var(--surface-2);border-radius:var(--radius-lg);height:100px;animation:shimmer 1.4s infinite ease-in-out;}
+@keyframes shimmer{0%,100%{opacity:.55}50%{opacity:1}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="top-bar">
+    <div class="logo">🎓</div>
+    <div class="title-box">
+      <h1>Korshub Deals</h1>
+      <p>Free &amp; discounted courses, updated daily</p>
+    </div>
+    <div class="count-pill" id="count">…</div>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp || null;
+if (tg) { tg.ready(); tg.expand(); }
+
+// Same Supabase project the bot writes to — kept exactly as configured.
+const SUPABASE_URL = 'https://uliqzxsjnzmimebgppap.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_QhO2ft170kcZ1pP8YWl4ZQ_wjhKs5KK';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const gridEl  = document.getElementById('grid');
+const countEl = document.getElementById('count');
+
+function priceHTML(c) {
+  if (c.is_free) return `<span class="price-now free-text">FREE</span>`;
+  if (c.has_discount && c.original_price) {
+    return `<span class="price-old">${c.original_price}</span><span class="price-now">${c.current_price || ''}</span>`;
+  }
+  if (c.current_price) return `<span class="price-now">${c.current_price}</span>`;
+  return '';
+}
+
+function tagsHTML(c) {
+  let t = '';
+  if (c.is_free) t += `<span class="tag free">FREE</span>`;
+  else if (c.has_discount) t += `<span class="tag discount">${c.discount_percent || 'DEAL'} OFF</span>`;
+  if (c.platform) t += `<span class="tag">${c.platform}</span>`;
+  if (c.category) t += `<span class="tag">${c.category}</span>`;
+  return t;
+}
+
+function courseCardHTML(c) {
+  const img = c.image
+    ? `<img src="${c.image}" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'"/>`
+    : '🎓';
+  return `
+    <div class="course-card" data-id="${encodeURIComponent(c.id)}">
+      <div class="course-thumb">${img}</div>
+      <div class="course-body">
+        <div class="course-title">${c.title || ''}</div>
+        <div class="course-tags">${tagsHTML(c)}</div>
+        <div class="price-row">${priceHTML(c)}</div>
+      </div>
+    </div>`;
+}
+
+function renderEmpty() {
+  gridEl.innerHTML = `<div class="empty-state">No deals right now — check back soon! 🎓</div>`;
+}
+
+async function loadCourses() {
+  try {
+    const { data, error, count } = await sb.from('courses')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .limit(90);
+    if (error) throw error;
+    if (!data || !data.length) { countEl.textContent = '0'; renderEmpty(); return; }
+
+    countEl.textContent = data.length + (count && count > data.length ? '+' : '');
+
+    const taskCardHTML = `<div class="task-card"><adsgram-task data-block-id="task-40716" data-debug="false" class="task"></adsgram-task></div>`;
+    const cards = data.map(courseCardHTML);
+    if (cards.length > 4) cards.splice(4, 0, taskCardHTML); else cards.push(taskCardHTML);
+    gridEl.innerHTML = cards.join('');
+
+    gridEl.querySelectorAll('.course-card').forEach(el => {
+      el.addEventListener('click', () => {
+        window.location.href = 'details.html?id=' + el.dataset.id;
+      });
+    });
+  } catch (e) {
+    console.error(e);
+    countEl.textContent = '!';
+    renderEmpty();
+  }
+}
+loadCourses();
+</script>
+</body>
+</html>
