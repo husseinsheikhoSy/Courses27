@@ -180,7 +180,7 @@ async function loadCourses() {
 
     countEl.textContent = data.length + (count && count > data.length ? '+' : '');
 
-    const taskCardHTML = `<div class="task-card"><adsgram-task data-block-id="task-40716" data-debug="false" class="task"></adsgram-task></div>`;
+    const taskCardHTML = `<div class="task-card"><adsgram-task data-block-id="task-47449" data-debug="false" class="task"></adsgram-task></div>`;
     const cards = data.map(courseCardHTML);
     if (cards.length > 4) cards.splice(4, 0, taskCardHTML); else cards.push(taskCardHTML);
     gridEl.innerHTML = cards.join('');
