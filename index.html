@@ -197,6 +197,25 @@ async function loadCourses() {
   }
 }
 loadCourses();
+
+// ── Courses Interstitial 1 (int-47443) — shown 3s after the home page loads ──
+(function () {
+  if (!window.Adsgram) return; // sad.min.js failed to load — skip silently
+  const homeInterstitial = window.Adsgram.init({ blockId: "int-47443" });
+
+  setTimeout(function () {
+    homeInterstitial.show()
+      .then((result) => {
+        // Ad watched/skipped successfully — nothing else to do here.
+        console.log("Interstitial result:", result);
+      })
+      .catch((result) => {
+        // No ad available, or an error occurred — fail silently so it
+        // never blocks the page.
+        console.log("Interstitial not shown:", result);
+      });
+  }, 3000);
+})();
 </script>
 </body>
 </html>
