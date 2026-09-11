@@ -38,11 +38,12 @@
 
 <style>
 :root{
-  --red:#e30613; --red-bright:#ff1f2e; --red-dark:#a2040d;
-  --red-soft:rgba(227,6,19,.08); --red-glow:rgba(227,6,19,.35);
-  --bg:#ffffff; --surface:#ffffff; --surface-2:#fff5f6; --surface-3:#ffe9eb;
-  --text:#1a0e0f; --text-muted:#8a6a6d; --border:#f1d7d9;
-  --success:#1fa15a; --gold:#e0a326;
+  --red:#8b1538; --red-bright:#c72c59; --red-dark:#18090f;
+  --red-soft:rgba(139,21,56,.08); --red-glow:rgba(139,21,56,.30);
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#fbf4f6; --surface-3:#f2e2e7;
+  --text:#171114; --text-muted:#78666c; --border:#ead6dc;
+  --black:#171114; --black-soft:#292024;
+  --success:#1fa15a; --gold:#d4a23a;
   --radius-xl:28px; --radius-lg:20px; --radius-md:15px;
   --shadow:0 24px 60px rgba(227,6,19,.14);
   --tg-viewport-height:100vh;
@@ -52,8 +53,9 @@ html{background:var(--bg);height:100%;}
 body{
   font-family:'Inter',sans-serif;color:var(--text);min-height:100%;height:100%;
   background:
-    radial-gradient(circle at 50% -15%, rgba(227,6,19,.10), transparent 40%),
-    linear-gradient(180deg,#ffffff 0%,#fff8f8 60%,#ffffff 100%);
+    radial-gradient(circle at 85% -10%, rgba(139,21,56,.13), transparent 38%),
+    radial-gradient(circle at 15% 35%, rgba(23,17,20,.045), transparent 35%),
+    linear-gradient(180deg,#ffffff 0%,#fbf7f8 60%,#ffffff 100%);
   display:flex;justify-content:center;align-items:flex-start;
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
   overflow-x:hidden;
@@ -68,7 +70,7 @@ body{
 
 .top-bar{
   padding:18px 16px;display:flex;align-items:center;gap:10px;
-  background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);color:#fff;
+  background:linear-gradient(135deg,var(--black) 0%,var(--red-dark) 48%,var(--red) 100%);color:#fff;
 }
 .back-btn{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.16);
   display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;cursor:pointer;color:#fff;border:none;}
@@ -99,7 +101,7 @@ body{
 .price-old{font-size:12px;color:var(--text-muted);text-decoration:line-through;font-weight:700;}
 .price-now{font-size:18px;font-weight:900;color:var(--red-dark);}
 .price-now.free-text{color:var(--success);}
-.discount-badge{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;font-size:12px;
+.discount-badge{background:linear-gradient(135deg,var(--black),var(--red));color:#fff;font-size:12px;
   font-weight:800;padding:6px 12px;border-radius:20px;white-space:nowrap;}
 
 .steps{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
@@ -117,13 +119,13 @@ body{
 .step-body span{font-size:11px;color:var(--text-muted);font-weight:600;}
 .step-btn{
   border:none;border-radius:11px;padding:9px 14px;font-size:12px;font-weight:800;color:#fff;
-  background:linear-gradient(135deg,var(--red),var(--red-dark));cursor:pointer;white-space:nowrap;
+  background:linear-gradient(135deg,var(--black),var(--red));cursor:pointer;white-space:nowrap;
 }
 .step-btn:disabled{opacity:.5;cursor:default;}
 .step-btn.watching{opacity:.75;}
 
 .progress-track{height:7px;border-radius:20px;background:var(--surface-3);overflow:hidden;margin-bottom:18px;}
-.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--red-bright));transition:width .35s;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--black),var(--red-bright));transition:width .35s;}
 #progress-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-top:6px;text-align:center;}
 
 .cta-btn{
@@ -131,7 +133,7 @@ body{
   background:var(--surface-3);color:var(--text-muted);cursor:not-allowed;
 }
 .cta-btn.unlocked{
-  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;cursor:pointer;
+  background:linear-gradient(135deg,var(--black),var(--red));color:#fff;cursor:pointer;
   box-shadow:0 14px 32px rgba(227,6,19,.35);
 }
 #success-msg{display:none;text-align:center;font-size:12px;font-weight:700;color:var(--success);margin-top:10px;}
@@ -139,6 +141,68 @@ body{
 #ad-notice{text-align:center;font-size:11px;color:var(--text-muted);font-weight:600;margin-top:10px;}
 
 #confetti-canvas{position:fixed;inset:0;pointer-events:none;display:none;z-index:999;}
+
+/* ── Course Details ─────────────────────────────────────────── */
+.course-details{
+  margin:0 0 18px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  background:linear-gradient(145deg,#fff 0%,#fbf4f6 100%);
+  box-shadow:0 12px 30px rgba(23,17,20,.07);
+}
+.course-details-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:13px 15px;
+  color:#fff;
+  background:linear-gradient(120deg,var(--black) 0%,var(--black-soft) 42%,var(--red) 100%);
+}
+.course-details-icon{
+  width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.13);
+  font-size:16px;
+}
+.course-details-title{
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.1px;
+}
+.course-details-body{
+  padding:14px 15px 15px;
+}
+.course-details-body:empty{display:none;}
+.detail-item{
+  position:relative;
+  padding:0 0 11px 15px;
+  margin:0 0 11px;
+  border-bottom:1px solid rgba(139,21,56,.10);
+  font-size:11.5px;
+  line-height:1.6;
+  color:var(--text);
+  font-weight:600;
+}
+.detail-item:last-child{
+  margin-bottom:0;
+  padding-bottom:0;
+  border-bottom:0;
+}
+.detail-item::before{
+  content:"";
+  position:absolute;
+  left:0;top:7px;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--black),var(--red-bright));
+  box-shadow:0 0 0 3px rgba(139,21,56,.08);
+}
+.detail-label{
+  color:var(--red-dark);
+  font-weight:900;
+}
+
 </style>
 </head>
 <body>
@@ -169,6 +233,12 @@ body{
         <span class="price-now" id="price-now"></span>
       </div>
       <span class="discount-badge" id="discount-badge" style="display:none;"></span>
+    <div class="course-details" id="course-details" style="display:none;">
+      <div class="course-details-head">
+        <div class="course-details-icon">📝</div>
+        <div class="course-details-title">Course Details</div>
+      </div>
+      <div class="course-details-body" id="course-details-body"></div>
     </div>
 
     <div class="steps">
@@ -365,6 +435,32 @@ async function loadCourse() {
     document.getElementById('course-thumb').innerHTML =
       `<img src="${data.image}" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'"/>`;
     document.getElementById('og-image').setAttribute('content', data.image);
+  }
+
+  // Render the scraped Course Details stored by the bot in Supabase.
+  const detailsBox = document.getElementById('course-details');
+  const detailsBody = document.getElementById('course-details-body');
+  if (data.details && String(data.details).trim()) {
+    const lines = String(data.details)
+      .split(/\\r?\\n/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    detailsBody.innerHTML = lines.map(line => {
+      const safe = line
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+      const match = safe.match(/^([^:]{1,70}):\\s*(.+)$/);
+      if (match) {
+        return `<div class="detail-item"><span class="detail-label">${match[1]}:</span> ${match[2]}</div>`;
+      }
+      return `<div class="detail-item">${safe}</div>`;
+    }).join('');
+
+    detailsBox.style.display = 'block';
   }
 
   if (data.is_free) {
