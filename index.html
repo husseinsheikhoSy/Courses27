@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Korshub Deals — Free &amp; Discounted Courses</title>
 <meta name="description" content="Browse fresh free and discounted courses from Udemy, Coursera, Skillshare and more — curated daily." />
-<meta name="theme-color" content="#e30613" />
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e30613'/%3E%3C/svg%3E" />
+<meta name="theme-color" content="#1414c4" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231414c4'/%3E%3C/svg%3E" />
 
 <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
 
@@ -31,23 +31,23 @@
 
 <style>
 :root{
-  --red:#e30613;
-  --red-bright:#ff1f2e;
-  --red-dark:#a2040d;
-  --red-soft:rgba(227,6,19,.10);
-  --red-glow:rgba(227,6,19,.35);
-  --bg:#ffffff;
-  --surface:#ffffff;
-  --surface-2:#fff5f6;
-  --border:#f1d7d9;
-  --text:#1a0e0f;
-  --text-muted:#8a6a6d;
+  --blue:#1414c4;
+  --blue-bright:#2f2fe0;
+  --blue-dark:#0a0a70;
+  --blue-soft:rgba(20,20,196,.10);
+  --blue-glow:rgba(20,20,196,.35);
+  --bg:#0b0b12;
+  --surface:#101018;
+  --surface-2:#151522;
+  --border:#22223a;
+  --text:#f2f2f8;
+  --text-muted:#9797b3;
   --success:#1fa15a;
   --gold:#e0a326;
   --radius-xl:26px;
   --radius-lg:18px;
   --radius-md:13px;
-  --shadow:0 18px 45px rgba(227,6,19,.12);
+  --shadow:0 18px 45px rgba(20,20,196,.28);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{background:var(--bg);}
@@ -63,15 +63,15 @@ body{
   position:sticky;top:0;z-index:20;
   padding:18px 16px 16px;
   display:flex;align-items:center;gap:10px;
-  background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);
+  background:linear-gradient(135deg,var(--blue) 0%,#000000 100%);
   color:#fff;
-  box-shadow:0 10px 26px rgba(227,6,19,.28);
+  box-shadow:0 10px 26px rgba(0,0,0,.45);
 }
-.logo{width:34px;height:34px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.logo{width:34px;height:34px;border-radius:9px;background:#000;border:1px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .title-box{flex:1;min-width:0;}
 .title-box h1{font-size:15px;font-weight:800;}
 .title-box p{font-size:11px;opacity:.85;font-weight:600;}
-.count-pill{background:rgba(255,255,255,.18);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:800;}
+.count-pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:800;}
 
 .grid{display:flex;flex-direction:column;gap:12px;padding:14px 16px 40px;}
 
@@ -81,17 +81,17 @@ body{
   box-shadow:var(--shadow);cursor:pointer;transition:transform .12s;
 }
 .course-card:active{transform:scale(.98);}
-.course-thumb{width:76px;height:76px;border-radius:12px;flex-shrink:0;overflow:hidden;background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:26px;}
+.course-thumb{width:76px;height:76px;border-radius:12px;flex-shrink:0;overflow:hidden;background:#000;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;}
 .course-thumb img{width:100%;height:100%;object-fit:cover;}
 .course-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;}
-.course-title{font-size:13.5px;font-weight:800;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.course-title{font-size:13.5px;font-weight:800;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text);}
 .course-tags{display:flex;gap:5px;flex-wrap:wrap;}
-.tag{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:6px;background:var(--surface-2);color:var(--red-dark);border:1px solid var(--border);}
+.tag{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:6px;background:#000;color:#cfcfff;border:1px solid var(--border);}
 .tag.free{background:linear-gradient(135deg,var(--success),#17824a);color:#fff;border:none;}
-.tag.discount{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;}
+.tag.discount{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;}
 .price-row{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;}
 .price-old{color:var(--text-muted);text-decoration:line-through;font-weight:700;font-size:11px;}
-.price-now{color:var(--red-dark);}
+.price-now{color:#5c5cff;}
 .price-now.free-text{color:var(--success);}
 
 .task-card{margin:4px 0;}
@@ -106,7 +106,7 @@ body{
   <div class="top-bar">
     <div class="logo">🎓</div>
     <div class="title-box">
-      <h1>Korshub Deals</h1>
+      <h1>Courses Deals</h1>
       <p>Free &amp; discounted courses, updated daily</p>
     </div>
     <div class="count-pill" id="count">…</div>
