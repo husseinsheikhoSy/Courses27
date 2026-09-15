@@ -42,7 +42,7 @@
   --blue-soft:rgba(20,20,196,.10); --blue-glow:rgba(20,20,196,.35);
   --bg:#0b0b12; --surface:#101018; --surface-2:#151522; --surface-3:#1c1c30;
   --text:#f2f2f8; --text-muted:#9797b3; --border:#22223a;
-  --success:#1fa15a; --gold:#e0a326;
+  --success:#1fa15a; --gold:#e0a326; --warn:#d9822b;
   --radius-xl:28px; --radius-lg:20px; --radius-md:15px;
   --shadow:0 24px 60px rgba(20,20,196,.30);
   --tg-viewport-height:100vh;
@@ -109,9 +109,11 @@ body{
 }
 .step.locked{opacity:.5;}
 .step.done{border-color:var(--success);background:rgba(31,161,90,.08);}
+.step.failed{border-color:var(--warn);background:rgba(217,130,43,.08);}
 .step-num{width:30px;height:30px;border-radius:50%;background:var(--blue-soft);color:#8f8fff;
   font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border);}
 .step.done .step-num{background:var(--success);color:#fff;border:none;}
+.step.failed .step-num{background:var(--warn);color:#fff;border:none;}
 .step-body{flex:1;min-width:0;}
 .step-body b{font-size:13px;font-weight:800;display:block;color:var(--text);}
 .step-body span{font-size:11px;color:var(--text-muted);font-weight:600;}
@@ -121,6 +123,7 @@ body{
 }
 .step-btn:disabled{opacity:.5;cursor:default;}
 .step-btn.watching{opacity:.75;}
+.step-btn.retry{background:linear-gradient(135deg,var(--warn),#a85e18);}
 
 .progress-track{height:7px;border-radius:20px;background:var(--surface-3);overflow:hidden;margin-bottom:18px;}
 .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--blue-bright));transition:width .35s;}
@@ -227,13 +230,14 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Adsgram block IDs — kept exactly as in the existing ad-flow templates.
 const ADSGRAM_INTERSTITIAL_ID_1 = 'int-47443';
 const ADSGRAM_INTERSTITIAL_ID_2 = 'int-47444';
-const AD_TIMEOUT_MS = 12000;
 
 let step1Done = false, step2Done = false, adPlaying = false;
 let ctrl1 = null, ctrl2 = null;
 let GO_URL = 'https://korshub.com/';
 
-function getAdsgramInterstitial(stepNum) {
+// Cache the controller per step (matches Adsgram's own useAdsgram example:
+// init() once, then call .show() on the same controller each time).
+function getAdsgramController(stepNum) {
   const blockId = stepNum === 1 ? ADSGRAM_INTERSTITIAL_ID_1 : ADSGRAM_INTERSTITIAL_ID_2;
   if (stepNum === 1 && ctrl1) return ctrl1;
   if (stepNum === 2 && ctrl2) return ctrl2;
@@ -245,46 +249,79 @@ function getAdsgramInterstitial(stepNum) {
   return null;
 }
 
-function showAdsgramInterstitial(stepNum) {
-  return new Promise((resolve) => {
-    const ctrl = getAdsgramInterstitial(stepNum);
-    if (!ctrl) { resolve('no_ad'); return; }
-    let settled = false;
-    const timer = setTimeout(() => { if (!settled) { settled = true; resolve('no_ad'); } }, AD_TIMEOUT_MS);
-    ctrl.show()
-      .then(() => { if (!settled) { settled = true; clearTimeout(timer); resolve('shown'); } })
-      .catch(() => { if (!settled) { settled = true; clearTimeout(timer); resolve('no_ad'); } });
-  });
+function setStepFailedUI(stepNum, message) {
+  const step = document.getElementById('step-' + stepNum);
+  const btn  = document.getElementById('btn-' + stepNum);
+  const sub  = document.getElementById('sub-' + stepNum);
+
+  step.classList.add('failed');
+  btn.classList.remove('watching');
+  btn.classList.add('retry');
+  btn.disabled = false;
+  btn.textContent = '↻ Retry';
+  sub.textContent = message;
 }
 
 function watchAd(stepNum) {
   if (adPlaying) return;
   if (stepNum === 1 && step1Done) return;
   if (stepNum === 2 && (!step1Done || step2Done)) return;
+
+  const step = document.getElementById('step-' + stepNum);
+  const btn  = document.getElementById('btn-' + stepNum);
+  const sub  = document.getElementById('sub-' + stepNum);
+
+  step.classList.remove('failed');
+  btn.classList.remove('retry');
+
+  const ctrl = getAdsgramController(stepNum);
+  if (!ctrl) {
+    // SDK itself never loaded (e.g. blocked script) — nothing to retry against.
+    console.warn('Adsgram SDK not available for step', stepNum);
+    setStepFailedUI(stepNum, 'Ad SDK unavailable — try again');
+    return;
+  }
+
   adPlaying = true;
-
-  const btn = document.getElementById('btn-' + stepNum);
   btn.classList.add('watching');
+  btn.disabled = true;
   btn.textContent = '⏳ Loading ad…';
+  sub.textContent = 'Loading ad…';
 
-  showAdsgramInterstitial(stepNum).then((status) => {
-    adPlaying = false;
-    btn.classList.remove('watching');
-    completeStep(stepNum, status !== 'shown');
-  });
+  // No artificial timeout/race here — rely purely on Adsgram's own
+  // then/catch, exactly as documented (the promise resolves once the
+  // user has watched the ad through or closed it, and rejects on a
+  // real error / no-fill).
+  ctrl.show()
+    .then(() => {
+      adPlaying = false;
+      completeStep(stepNum);
+    })
+    .catch((err) => {
+      // Swallowing this silently is what was hiding the real failure
+      // reason (low fill rate, wrong blockId, network issue, etc).
+      console.warn('Adsgram show() failed for step ' + stepNum + ':', err);
+      adPlaying = false;
+      btn.disabled = false;
+      // Do NOT unlock the step on failure — let the user retry instead,
+      // so the unlock stays tied to an actual ad view.
+      setStepFailedUI(stepNum, 'Ad unavailable right now — tap to retry');
+    });
 }
 
-function completeStep(stepNum, skipped) {
+function completeStep(stepNum) {
   const step = document.getElementById('step-' + stepNum);
   const btn  = document.getElementById('btn-' + stepNum);
   const sub  = document.getElementById('sub-' + stepNum);
   const num  = document.getElementById('num-' + stepNum);
 
+  step.classList.remove('failed');
   step.classList.add('done');
+  btn.classList.remove('watching', 'retry');
   num.textContent = '✓';
   btn.disabled = true;
   btn.textContent = '✓ Completed';
-  sub.textContent = skipped ? 'Ad unavailable — continued ✓' : 'Done ✓';
+  sub.textContent = 'Done ✓';
 
   const fill = document.getElementById('progress-fill');
   const label = document.getElementById('progress-label');
