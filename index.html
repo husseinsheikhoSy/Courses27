@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Korshub Deals — Free &amp; Discounted Courses</title>
-<meta name="description" content="Browse fresh free and discounted courses from Udemy, Coursera, Skillshare and more — curated daily." />
+<title>Free Tech Courses — Updated Daily</title>
+<meta name="description" content="Browse fresh free technology courses from top universities and platforms — curated daily." />
 <meta name="theme-color" content="#1414c4" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231414c4'/%3E%3C/svg%3E" />
 
@@ -106,8 +106,8 @@ body{
   <div class="top-bar">
     <div class="logo">🎓</div>
     <div class="title-box">
-      <h1>Courses Deals</h1>
-      <p>Free &amp; discounted courses, updated daily</p>
+      <h1>Free Tech Courses</h1>
+      <p>Free courses from top providers, updated daily</p>
     </div>
     <div class="count-pill" id="count">…</div>
   </div>
@@ -132,33 +132,33 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const gridEl  = document.getElementById('grid');
 const countEl = document.getElementById('count');
 
+function esc(v) {
+  return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 function priceHTML(c) {
-  if (c.is_free) return `<span class="price-now free-text">FREE</span>`;
-  if (c.has_discount && c.original_price) {
-    return `<span class="price-old">${c.original_price}</span><span class="price-now">${c.current_price || ''}</span>`;
-  }
-  if (c.current_price) return `<span class="price-now">${c.current_price}</span>`;
-  return '';
+  const extra = [c.duration, c.certificate].filter(Boolean).map(esc).join(' · ');
+  return `<span class="price-now free-text">FREE</span>` +
+    (extra ? `<span class="price-old" style="text-decoration:none">${extra}</span>` : '');
 }
 
 function tagsHTML(c) {
-  let t = '';
-  if (c.is_free) t += `<span class="tag free">FREE</span>`;
-  else if (c.has_discount) t += `<span class="tag discount">${c.discount_percent || 'DEAL'} OFF</span>`;
-  if (c.platform) t += `<span class="tag">${c.platform}</span>`;
-  if (c.category) t += `<span class="tag">${c.category}</span>`;
+  let t = `<span class="tag free">FREE</span>`;
+  if (c.platform) t += `<span class="tag">${esc(c.platform)}</span>`;
+  if (c.level) t += `<span class="tag">${esc(c.level)}</span>`;
   return t;
 }
 
 function courseCardHTML(c) {
   const img = c.image
-    ? `<img src="${c.image}" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'"/>`
+    ? `<img src="${esc(c.image)}" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='🎓'"/>`
     : '🎓';
   return `
     <div class="course-card" data-id="${encodeURIComponent(c.id)}">
       <div class="course-thumb">${img}</div>
       <div class="course-body">
-        <div class="course-title">${c.title || ''}</div>
+        <div class="course-title">${esc(c.title)}</div>
         <div class="course-tags">${tagsHTML(c)}</div>
         <div class="price-row">${priceHTML(c)}</div>
       </div>
@@ -166,14 +166,15 @@ function courseCardHTML(c) {
 }
 
 function renderEmpty() {
-  gridEl.innerHTML = `<div class="empty-state">No deals right now — check back soon! 🎓</div>`;
+  gridEl.innerHTML = `<div class="empty-state">No courses yet — check back soon! 🎓</div>`;
 }
 
 async function loadCourses() {
   try {
     const { data, error, count } = await sb.from('courses')
       .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false })
+      .not('posted_at', 'is', null)
+      .order('posted_at', { ascending: false })
       .limit(90);
     if (error) throw error;
     if (!data || !data.length) { countEl.textContent = '0'; renderEmpty(); return; }
