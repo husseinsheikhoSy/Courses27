@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Free Tech Courses — Updated Daily</title>
+<meta name="description" content="Browse fresh free technology courses from top universities and platforms — curated daily." />
+<meta name="theme-color" content="#059669" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23059669'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E" />
+
+<script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+<style id="theme-fallback">
+/* fallback: white + emerald (day) — used if theme.js is missing or cached; theme.js overrides it */
+:root{--bg:#eef8f3;--surface:#ffffff;--surface-2:#f2faf6;--surface-3:#e1f2ea;--text:#06281c;--muted:#4b6b5d;--faint:#8aa699;--border:rgba(5,120,85,.16);
+--em-b:#10b981;--em:#059669;--em-d:#047857;--em-soft:rgba(16,185,129,.12);--tint:#047857;--deep:#e6f6ee;--on-accent:#fff;--btn-fg:#fff;--fg:6,40,28;--sh:6,60,40;--bar:255,255,255;
+--ac:16,185,129;--ac-d:5,150,105;--success:#059669;--danger:#d62f48;--warn:#c27410;--gold:#b7791f;--hdr-a:#059669;--hdr-b:#10b981;
+--shadow:0 18px 50px rgba(5,100,70,.14);--shadow-em:0 10px 26px rgba(5,150,105,.22)}
+.top-bar{background:linear-gradient(135deg,var(--hdr-a) 0%,var(--hdr-b) 100%)!important;color:#fff!important;border-bottom:0!important}
+.top-bar .top-title{color:#fff}.top-bar .top-sub{color:rgba(255,255,255,.88)}
+.top-bar::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent)!important}
+.top-bar .theme-btn,.top-bar .icon-btn{color:#fff!important;border-color:rgba(255,255,255,.38)!important;background:rgba(255,255,255,.18)!important}
+.top-bar .logo{background:#fff;border-color:rgba(255,255,255,.7)}
+.top-bar .count-pill{background:#fff;border-color:#fff;color:#047857}
+</style>
+<script src="theme.js?v=2"></script>
+
+<!-- Deep-link routing: startapp=<slug> -> open the course detail page directly -->
+<script>
+(function () {
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var qs = new URLSearchParams(window.location.search);
+  var startParam = qs.get('startapp') || qs.get('tgWebAppStartParam') ||
+    (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param);
+  if (!startParam) return;
+  window.location.replace('details.html?id=' + encodeURIComponent(startParam));
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<script src="ads.js?v=2"></script>
+
+<style>
+:root{
+  --r-xl:28px;--r-lg:20px;--r-md:15px;
+  --safe-top:calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px));
+  --safe-bottom:calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px));
+  --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;min-height:100%;background:var(--bg);overflow-x:hidden;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font);width:100%;min-height:100dvh;color:var(--text);
+  background:radial-gradient(circle at 50% -15%,rgba(var(--ac),.22),transparent 38%),
+             radial-gradient(circle at 100% 35%,rgba(var(--ac-d),.10),transparent 30%),
+             linear-gradient(180deg,var(--bg) 0%,var(--surface) 48%,var(--bg) 100%);
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation}
+input{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--em-b);outline-offset:3px}
+svg{display:block}
+.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+.app-shell{width:min(100%,500px);margin:0 auto;min-height:100dvh;background:var(--surface);position:relative;box-shadow:var(--shadow);padding-bottom:calc(var(--safe-bottom) + 28px)}
+@media (min-width:640px){body{padding:24px 14px 40px}.app-shell{border-radius:var(--r-xl);min-height:0;overflow:hidden}}
+
+/* Header */
+.top-bar{
+  position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;overflow:hidden;
+  padding:calc(14px + var(--safe-top)) 16px 14px;
+  background:radial-gradient(circle at 82% 18%,rgba(var(--ac-d),.18),transparent 27%),
+             radial-gradient(circle at 12% 65%,rgba(var(--ac),.24),transparent 35%),
+             linear-gradient(135deg,var(--deep) 0%,var(--surface) 60%,var(--surface) 100%);
+  border-bottom:1px solid var(--border);
+}
+.top-bar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--em-b),transparent)}
+.logo{width:44px;height:44px;flex:0 0 44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;
+  background:linear-gradient(145deg,var(--em-b),var(--em-d));border:1.5px solid rgba(var(--ac),.55);box-shadow:var(--shadow-em)}
+.top-copy{min-width:0;flex:1}
+.top-title{font-size:15px;font-weight:800;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-sub{margin-top:2px;color:var(--muted);font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count-pill{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;border:1px solid rgba(var(--ac),.4);
+  background:var(--em-soft);color:var(--tint);font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+
+.view{padding:16px 16px 8px;animation:viewIn .25s ease both}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Search + chips */
+.search{display:flex;align-items:center;gap:9px;padding:0 14px;height:46px;margin-bottom:10px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;font-size:16px;color:var(--text)}
+.search input::placeholder{color:var(--faint)}
+.search:focus-within{border-color:rgba(var(--ac),.6)}
+.cat-bar{display:flex;gap:8px;margin:0 -16px;padding:2px 16px 12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cat-bar::-webkit-scrollbar{display:none}
+.cat-chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap;transition:background .15s,color .15s,transform .1s}
+.cat-chip:active{transform:scale(.95)}
+.cat-chip.active{background:linear-gradient(135deg,var(--em-b),var(--em));border-color:rgba(var(--ac),.6);color:var(--btn-fg);box-shadow:0 6px 18px rgba(var(--ac),.3)}
+.cat-chip .chip-count{font-size:10px;font-weight:800;opacity:.75}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+.course-card{position:relative;display:flex;gap:12px;align-items:stretch;padding:11px;border:1px solid var(--border);border-radius:17px;cursor:pointer;
+  background:linear-gradient(145deg,rgba(var(--fg),.04),rgba(var(--fg),.012));transition:transform .15s,border-color .2s,background .2s;user-select:none;touch-action:manipulation}
+.course-card:active{transform:scale(.985)}
+@media (hover:hover){.course-card:hover{border-color:rgba(var(--ac),.45);background:linear-gradient(145deg,rgba(var(--ac),.08),rgba(var(--fg),.012))}}
+.course-thumb{width:84px;height:84px;flex:0 0 84px;overflow:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;
+  background:linear-gradient(145deg,var(--em-b),var(--deep));border:1px solid rgba(var(--ac),.28)}
+.course-thumb img{width:100%;height:100%;object-fit:cover}
+.course-body{flex:1;min-width:0;display:flex;flex-direction:column}
+.course-title{font-size:13px;line-height:1.35;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text)}
+.course-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.tag{padding:3px 8px;border-radius:999px;background:rgba(var(--fg),.05);border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag.free-tag{background:var(--em-soft);border-color:rgba(var(--ac),.4);color:var(--tint)}
+.course-foot{margin-top:auto;padding-top:7px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;font-weight:600}
+.course-foot .extra{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.course-foot .free{margin-left:auto;color:var(--em);font-weight:800;font-size:12px}
+html[data-theme="dark"] .course-foot .free{color:var(--em-b)}
+
+.task-card{margin:2px 0}
+adsgram-task.task{display:block;padding:11px;border:1px solid var(--border);border-radius:16px;background:rgba(var(--fg),.03);
+  --adsgram-task-font-size:13px;--adsgram-task-icon-size:42px;--adsgram-task-icon-title-gap:11px;--adsgram-task-icon-border-radius:10px;--adsgram-task-button-width:82px}
+
+.skel-card{display:flex;gap:12px;padding:11px;border:1px solid var(--border);border-radius:17px;background:rgba(var(--fg),.025)}
+.skel-thumb{width:84px;height:84px;flex:0 0 84px;border-radius:14px}
+.skel-line,.skel-thumb{background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface-3) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+.skel-lines{flex:1;display:flex;flex-direction:column;gap:9px;justify-content:center}
+.skel-line{height:10px;border-radius:7px}.skel-line.w60{width:60%}.skel-line.w40{width:40%}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.empty-state{text-align:center;padding:56px 24px;color:var(--muted);font-size:13px;font-weight:700;line-height:1.6}
+.empty-state .emoji{font-size:40px;margin-bottom:10px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="top-bar">
+    <div class="logo">🎓</div>
+    <div class="top-copy">
+      <div class="top-title">Free Tech Courses</div>
+      <div class="top-sub">Free courses from top providers, updated daily</div>
+    </div>
+    <div class="count-pill" id="count">…</div>
+  </header>
+
+  <main class="view">
+    <label class="search">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" inputmode="search" autocomplete="off" placeholder="Search free courses" aria-label="Search free courses" />
+    </label>
+    <div class="cat-bar" id="cat-bar" style="display:none"></div>
+
+    <div class="grid" id="grid">
+      <div class="skel-card"><div class="skel-thumb"></div><div class="skel-lines"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+      <div class="skel-card"><div class="skel-thumb"></div><div class="skel-lines"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+      <div class="skel-card"><div class="skel-thumb"></div><div class="skel-lines"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+      <div class="skel-card"><div class="skel-thumb"></div><div class="skel-lines"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp || null;
+if (tg) {
+  try { tg.ready(); if (tg.isExpanded === false) tg.expand(); if (window.AppTheme) window.AppTheme.syncTelegram(); } catch (e) {}
+}
+
+// Same Supabase project the bot writes to — kept exactly as configured.
+const SUPABASE_URL = 'https://uliqzxsjnzmimebgppap.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_QhO2ft170kcZ1pP8YWl4ZQ_wjhKs5KK';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Adsgram block IDs — kept exactly as in the bot's existing setup.
+const ADSGRAM_HOME_INTERSTITIAL = 'int-47443';
+const ADSGRAM_HOME_TASK = 'task-47449';
+
+const gridEl  = document.getElementById('grid');
+const countEl = document.getElementById('count');
+const searchEl = document.getElementById('search');
+const catBar = document.getElementById('cat-bar');
+
+let ALL = [];
+let activeCat = 'all';
+let totalCount = 0;
+
+function esc(v) {
+  return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function courseCardHTML(c) {
+  const img = c.image
+    ? `<img src="${esc(c.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='🎓'"/>`
+    : '🎓';
+  let tags = `<span class="tag free-tag">FREE</span>`;
+  if (c.platform) tags += `<span class="tag">${esc(c.platform)}</span>`;
+  if (c.level) tags += `<span class="tag">${esc(c.level)}</span>`;
+  else if (c.category) tags += `<span class="tag">${esc(c.category)}</span>`;
+  const extra = [c.duration, c.certificate].filter(Boolean).map(esc).join(' · ');
+  return `
+    <div class="course-card" data-id="${encodeURIComponent(c.id)}">
+      <div class="course-thumb">${img}</div>
+      <div class="course-body">
+        <div class="course-title">${esc(c.title)}</div>
+        <div class="course-tags">${tags}</div>
+        <div class="course-foot"><span class="extra">${extra}</span><span class="free">FREE</span></div>
+      </div>
+    </div>`;
+}
+
+function renderEmpty(msg) {
+  gridEl.innerHTML = `<div class="empty-state"><div class="emoji">🎓</div>${esc(msg || 'No courses yet — check back soon!')}</div>`;
+}
+
+function renderCats() {
+  const counts = {};
+  ALL.forEach(c => { if (c.category) counts[c.category] = (counts[c.category] || 0) + 1; });
+  const names = Object.keys(counts);
+  if (names.length < 2) { catBar.style.display = 'none'; return; }
+  let html = `<button class="cat-chip ${activeCat === 'all' ? 'active' : ''}" data-cat="all">All <span class="chip-count">${ALL.length}</span></button>`;
+  names.forEach(n => {
+    html += `<button class="cat-chip ${activeCat === n ? 'active' : ''}" data-cat="${esc(n)}">${esc(n)} <span class="chip-count">${counts[n]}</span></button>`;
+  });
+  catBar.innerHTML = html;
+  catBar.style.display = '';
+}
+
+function renderGrid() {
+  const q = searchEl.value.trim().toLowerCase();
+  const list = ALL.filter(c =>
+    (activeCat === 'all' || c.category === activeCat) &&
+    (!q || [c.title, c.platform, c.category, c.level].filter(Boolean).join(' ').toLowerCase().includes(q)));
+
+  if (!list.length) { renderEmpty(ALL.length ? 'No courses match your search.' : null); return; }
+
+  const cards = list.map(courseCardHTML);
+  const taskCardHTML = `<div class="task-card"><adsgram-task data-block-id="${ADSGRAM_HOME_TASK}" data-debug="false" class="task"></adsgram-task></div>`;
+  if (cards.length > 4) cards.splice(4, 0, taskCardHTML); else cards.push(taskCardHTML);
+  gridEl.innerHTML = cards.join('');
+}
+
+catBar.addEventListener('click', e => {
+  const b = e.target.closest('.cat-chip'); if (!b) return;
+  activeCat = b.dataset.cat; renderCats(); renderGrid();
+  try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
+});
+searchEl.addEventListener('input', renderGrid);
+gridEl.addEventListener('click', e => {
+  const card = e.target.closest('.course-card'); if (!card) return;
+  window.location.href = 'details.html?id=' + card.dataset.id;
+});
+
+async function loadCourses() {
+  try {
+    const { data, error, count } = await sb.from('courses')
+      .select('*', { count: 'exact' })
+      .not('posted_at', 'is', null)
+      .order('posted_at', { ascending: false })
+      .limit(90);
+    if (error) throw error;
+    if (!data || !data.length) { countEl.textContent = '0'; renderEmpty(); return; }
+    ALL = data;
+    totalCount = count || data.length;
+    countEl.textContent = data.length + (count && count > data.length ? '+' : '');
+    renderCats();
+    renderGrid();
+  } catch (e) {
+    console.error(e);
+    countEl.textContent = '!';
+    renderEmpty('Could not load courses. Please try again.');
+  }
+}
+loadCourses();
+
+// ── Opening ad (Adsgram int-47443) — shown ~3s after the home page loads, never blocks the page ──
+setTimeout(function () {
+  if (!window.AdManager) return;
+  AdManager.show({ adsgram: ADSGRAM_HOME_INTERSTITIAL })
+    .then(r => console.log('Interstitial result:', r))
+    .catch(r => console.log('Interstitial not shown:', r));
+}, 3000);
+</script>
+</body>
+</html>
